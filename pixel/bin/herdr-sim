@@ -3,17 +3,115 @@
 
 Frames are drawn with the Kitty graphics protocol (Herdr terminals support it); each
 frame replaces the last, so memory stays flat. Click to tap, drag to swipe.
-Android taps and typing go through adb. iOS shows live; iOS taps, typing and the
-Home button need AXe (`brew install cameroncooke/axe/axe`), since simctl cannot tap.
+Android taps and typing go through adb. simctl cannot tap, so iOS taps, swipes,
+typing and Home go through Maestro (`maestro mcp`, kept running: ~10s for the first
+step, then ~1.2s each) when Maestro and a Java runtime are installed.
 
 Keys: n next device · h home · b back (Android) · t type text · d dark/light
       s screenshot to Desktop · o open Simulator.app · B boot an iPhone · q quit
 """
-import base64, fcntl, hashlib, json, os, select, shutil, signal, struct, subprocess, sys, tempfile, termios, time, tty
+import base64, fcntl, hashlib, json, os, queue, select, shutil, signal, struct, subprocess, sys, tempfile, termios, threading, time, tty
 
 FRAME_SECONDS = 0.4  # ponytail: screenshot polling (~2 fps); a video stream if smooth motion matters
 TMP = tempfile.mkdtemp(prefix="herdr-sim-")
-AXE = shutil.which("axe")
+MAESTRO_HINT = "iOS input needs Maestro and Java: brew install mobile-dev-inc/tap/maestro openjdk@17"
+
+
+def java_home():
+    """Maestro needs Java: JAVA_HOME, else a Homebrew OpenJDK or Android Studio's runtime."""
+    for home in (os.environ.get("JAVA_HOME"), "/opt/homebrew/opt/openjdk@17", "/opt/homebrew/opt/openjdk",
+                 "/usr/local/opt/openjdk@17", "/Applications/Android Studio.app/Contents/jbr/Contents/Home"):
+        if home and os.path.exists(os.path.join(home, "bin", "java")):
+            return home
+    return None
+
+
+class Maestro:
+    """iOS input through one long-running `maestro mcp`. Steps queue on a worker thread
+    so frames keep coming while a tap is in flight."""
+
+    def __init__(self, note):
+        self.note = note  # callback: text for the status line ("" clears it)
+        self.jobs = queue.Queue()
+        self.proc = None
+        self.n = 0
+        self.used = set()  # device ids, to stop their drivers on quit
+        threading.Thread(target=self.work, daemon=True).start()
+
+    @staticmethod
+    def available():
+        return bool(shutil.which("maestro") and java_home())
+
+    def send(self, device, steps):
+        self.jobs.put((device, steps))
+
+    def rpc(self, method, params=None):
+        self.n += 1
+        self.proc.stdin.write(json.dumps({"jsonrpc": "2.0", "id": self.n, "method": method, "params": params or {}}) + "\n")
+        self.proc.stdin.flush()
+        while True:
+            line = self.proc.stdout.readline()
+            if not line:
+                raise RuntimeError("Maestro stopped")
+            try:
+                msg = json.loads(line)
+            except ValueError:
+                continue
+            if msg.get("id") == self.n:
+                return msg
+
+    def start(self):
+        home = java_home()
+        env = dict(os.environ, JAVA_HOME=home, PATH=f"{home}/bin:{os.environ.get('PATH', '')}")
+        self.proc = subprocess.Popen(["maestro", "mcp", "--no-viewer"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                     stderr=subprocess.DEVNULL, text=True, env=env)
+        self.rpc("initialize", {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "herdr-sim", "version": "1"}})
+        self.proc.stdin.write(json.dumps({"jsonrpc": "2.0", "method": "notifications/initialized"}) + "\n")
+        self.proc.stdin.flush()
+
+    def work(self):
+        while True:
+            device, steps = self.jobs.get()
+            self.used.add(device)
+            try:
+                if not self.proc or self.proc.poll() is not None:
+                    self.note("Starting Maestro (the first step takes ~10s)…")
+                    self.start()
+                # The appId header is required; point taps, swipes, typing and Home don't use it.
+                yaml = "appId: com.apple.springboard\n---\n" + "".join(steps)
+                msg = self.rpc("tools/call", {"name": "run", "arguments": {"device_id": device, "yaml": yaml}})
+                self.note(self.outcome(msg))
+            except Exception as e:  # keep the pane alive; the next step restarts Maestro
+                self.note(f"Maestro: {e}")
+                self.close()
+
+    @staticmethod
+    def outcome(msg):
+        """Status-line text for a tools/call reply: "" on success, else Maestro's message.
+        A success is JSON text; a failure (isError) is plain text such as
+        "Failed to run flow: Device with id … is not connected"."""
+        if "error" in msg:
+            return f"Maestro: {msg['error'].get('message', 'step failed')}"
+        res = msg.get("result", {})
+        text = (res.get("content") or [{}])[0].get("text", "")
+        try:
+            data = json.loads(text)
+        except ValueError:
+            data = {"success": False, "message": text}
+        if not res.get("isError") and data.get("success"):
+            return ""
+        return f"Maestro: {(data.get('message') or 'step failed').removeprefix('Failed to run flow: ')}"
+
+    def quit(self):
+        """Stop Maestro and the XCTest driver it leaves running on each device it drove."""
+        self.close()
+        for device in self.used:
+            run(["pkill", "-f", f"xcodebuild test-without-building -xctestrun .*{device}"])
+
+    def close(self):
+        if self.proc and self.proc.poll() is None:
+            self.proc.terminate()
+        self.proc = None
 
 
 def run(args, timeout=10, **kw):
@@ -89,6 +187,17 @@ class Sim:
         self.dark = {}
         self.press = None
         self.dirty = True
+        self.maestro = Maestro(self.set_note) if Maestro.available() else None
+
+    def set_note(self, text):
+        self.note, self.dirty = text, True
+
+    def ios(self, *steps):
+        """Run Maestro steps on the shown iOS simulator, or say what's missing."""
+        if self.maestro:
+            self.maestro.send(self.dev["id"], steps)
+        else:
+            self.note = MAESTRO_HINT
 
     @property
     def dev(self):
@@ -148,30 +257,23 @@ class Sim:
         w, h = png_size(self.frame)
         return int((col - left + 0.5) / ic * w), int((row - top + 0.5) / ir * h)
 
-    def ios_points(self, x, y):
-        # ponytail: Retina scale guessed from the frame width (3x phones, 2x the rest).
-        s = 3 if png_size(self.frame)[0] >= 1000 and "iPad" not in self.dev["name"] else 2
-        return x // s, y // s
+    def percent(self, x, y):
+        w, h = png_size(self.frame)
+        return f'"{round(x * 100 / w)}%,{round(y * 100 / h)}%"'
 
     def tap(self, x, y):
         d = self.dev
         if d["kind"] == "android":
             run(["adb", "-s", d["id"], "shell", "input", "tap", str(x), str(y)])
-        elif AXE:
-            px, py = self.ios_points(x, y)
-            run([AXE, "tap", "-x", str(px), "-y", str(py), "--udid", d["id"]])
         else:
-            self.note = "iOS taps need AXe: brew install cameroncooke/axe/axe"
+            self.ios(f"- tapOn:\n    point: {self.percent(x, y)}\n")
 
     def swipe(self, a, b):
         d = self.dev
         if d["kind"] == "android":
             run(["adb", "-s", d["id"], "shell", "input", "swipe", *map(str, (*a, *b)), "250"])
-        elif AXE:
-            (x1, y1), (x2, y2) = self.ios_points(*a), self.ios_points(*b)
-            run([AXE, "swipe", "--start-x", str(x1), "--start-y", str(y1), "--end-x", str(x2), "--end-y", str(y2), "--udid", d["id"]])
         else:
-            self.note = "iOS swipes need AXe: brew install cameroncooke/axe/axe"
+            self.ios(f"- swipe:\n    start: {self.percent(*a)}\n    end: {self.percent(*b)}\n    duration: 300\n")
 
     def key(self, c):
         if c in "\r\n":
@@ -199,10 +301,8 @@ class Sim:
         if c == "h":
             if d["kind"] == "android":
                 run(["adb", "-s", d["id"], "shell", "input", "keyevent", "3"])
-            elif AXE:
-                run([AXE, "button", "home", "--udid", d["id"]])
             else:
-                self.note = "iOS Home needs AXe: brew install cameroncooke/axe/axe"
+                self.ios("- pressKey: Home\n")
         elif c == "b" and d["kind"] == "android":
             run(["adb", "-s", d["id"], "shell", "input", "keyevent", "4"])
         elif c == "d":
@@ -247,10 +347,8 @@ class Sim:
         d = self.dev
         if text and d["kind"] == "android":
             run(["adb", "-s", d["id"], "shell", "input", "text", text.replace(" ", "%s")])
-        elif text and AXE:
-            run([AXE, "type", text, "--udid", d["id"]])
         elif text:
-            self.note = "iOS typing needs AXe: brew install cameroncooke/axe/axe"
+            self.ios(f"- inputText: {json.dumps(text)}\n")
         self.dirty = True
 
     def mouse(self, seq):
@@ -305,6 +403,8 @@ def main():
     except (SystemExit, KeyboardInterrupt):
         pass
     finally:
+        if sim.maestro:
+            sim.maestro.quit()
         out("\x1b_Ga=d,d=A,q=2\x1b\\\x1b[?1006l\x1b[?1002l\x1b[?1000l\x1b[?25h\x1b[?1049l")
         termios.tcsetattr(0, termios.TCSADRAIN, old)
         shutil.rmtree(TMP, ignore_errors=True)

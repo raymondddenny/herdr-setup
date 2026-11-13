@@ -58,7 +58,7 @@ The focused pane's border and the cursor are orange.
 
 - Image and PDF previews: clicking an image or PDF on this computer in the Files panel closes any `file-preview` pane in the tab, splits a new one to the right with `{file}`, and gives the keyboard back to the pane that had it (so the Files panel keeps its folder). One image fits the pane (never upscaled); PDF pages fill the pane's width and scroll, each with `n / total` under it. The header shows the file name, the page count and an "Open in Preview" button (`exec("open", [file])`).
 
-- Simulator pane: ⌘⌥S (`layout:pixel` binding) splits a terminal running `bin/herdr-sim`, which shows a booted iOS simulator or Android device with Kitty graphics (image id 1, replaced each frame), polls screenshots every 0.4s and redraws only on change. SGR mouse clicks tap and drags swipe (adb on Android; AXe on iOS when installed, else a hint). Keys: n h b t d s o B q.
+- Simulator pane: ⌘⌥S (`layout:pixel` binding) splits a terminal running `bin/herdr-sim`, which shows a booted iOS simulator or Android device with Kitty graphics (image id 1, replaced each frame), polls screenshots every 0.4s and redraws only on change. SGR mouse clicks tap and drags swipe (adb on Android; on iOS one long-running `maestro mcp` fed `run` flows from a worker thread, needing Maestro plus a Java runtime, else a hint; quitting also stops Maestro's XCTest driver). Keys: n h b t d s o B q.
 
 ## Built from
 

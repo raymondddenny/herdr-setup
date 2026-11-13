@@ -104,7 +104,11 @@ Press **⌘⌥S** (Command-Option-S) to open a booted iOS simulator or Android d
 - Click to tap, drag to swipe.
 - Keys: `n` next device, `h` home, `b` back (Android), `t` type text, `d` dark/light, `s` screenshot to Desktop, `o` open Simulator.app, `B` boot an iPhone, `q` quit.
 - Frames refresh about twice a second, and only when the screen changed.
-- iOS shows live with just Xcode. Taps, typing and Home on iOS need [AXe](https://github.com/cameroncooke/AXe) (`brew install cameroncooke/axe/axe`), because Apple's `simctl` cannot tap. Android works fully with `adb`.
+- iOS shows live with just Xcode.
+  Taps, swipes, typing and Home on iOS go through [Maestro](https://maestro.dev), because Apple's `simctl` cannot tap: `brew install mobile-dev-inc/tap/maestro openjdk@17`.
+  The first step takes about 10 seconds while Maestro starts; after that each one takes about a second.
+  Quitting stops Maestro and its iOS driver.
+- Android works fully with `adb`.
 - It draws with the Kitty graphics protocol, which Herdr terminals support, so each frame replaces the last and memory stays flat.
 
 ## Install
