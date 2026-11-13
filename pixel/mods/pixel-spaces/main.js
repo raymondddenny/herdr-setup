@@ -1,3 +1,6 @@
+// Cozy Pixel: modified from the `spaces` mod shipped with Herdr 0.1.15 (Apache License 2.0).
+// Changed: pixel-font headers, colored machine headers with a rule, plain space rows with an accent bar.
+
 // Workspace spaces: stable colored avatars, worktrees under their checkout,
 // grouped by machine when more than one is known. After a space's name, the repo
 // its first terminal is in now, only where unusual: branch, ahead/behind. Agent state lives in the agents list, not here. Click to

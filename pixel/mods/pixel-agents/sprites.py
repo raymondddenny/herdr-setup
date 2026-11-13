@@ -243,6 +243,42 @@ KBKFFFFFFFFFKBK.
 KBBKRRRRRRRKBBK.
 .KBKRrrrrrRKBK..
 ..KYYKKKKKYYK..."""),
+  # Frog in a yellow raincoat, big happy grin.
+  "frog": ({"G": "#7fc060", "W": "#f4f4ea", "Y": "#f2c23a", "y": "#d8a428"}, """
+................
+..KKKK...KKKK...
+.KWWWWK.KWWWWK..
+.KWKKWKKKWKKWK..
+.KGWWGGGGGWWGK..
+KGGGGGGGGGGGGGK.
+KGGGGGGGGGGGGGK.
+KGcGGGGGGGGGcGK.
+KGGKGGGGGGGKGGK.
+.KGGKKKKKKKGGK..
+..KGGGGGGGGGK...
+..KYYYYYYYYYK...
+.KGYYyYKYyYYGK..
+.KGYYYYYYYYYGK..
+..KYYYYKYYYYK...
+..KGGKK.KKGGK..."""),
+  # Brown bear in a red scarf, holding a honey pot.
+  "bear": ({"B": "#9a6a44", "b": "#c8946a", "M": "#e8c8a0", "R": "#c8504a", "r": "#f2d2a0", "H": "#f2b34a", "h": "#d88a2a"}, """
+................
+.KKK.......KKK..
+.KBbK.....KbBK..
+.KBBKKKKKKKBBK..
+.KBBBBBBBBBBBK..
+KBBBBBBBBBBBBBK.
+KBBKBBBBBBBKBBK.
+KBcBBMMMMMBBcBK.
+KBBBBMMKMMBBBBK.
+.KBBBMKMKMBBBK..
+..KBBBMMMBBBK...
+..KRRRRRRRRRK...
+.KBRrRRRRRrRBK..
+.KBBKHHHHHKBBK..
+..KBKHhHHHKBK...
+..KKKKKKKKKKK..."""),
 }
 
 def rect(x, y, w, h, c, a=None):

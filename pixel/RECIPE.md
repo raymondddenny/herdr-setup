@@ -40,7 +40,7 @@ The focused pane's border and the cursor are orange.
 - `KEEP`: a candlelit stone nook with a side tapestry and a blue cushion.
 - `CAVE`: a campfire grotto with warm crystals and glowing mushrooms.
 
-**Adventurers (16x16 chibi sprites, plum outline `#3b2433`, blush cheeks):** a knight with a scarf and cocoa, a wizard in a knit hat and sweater, a ranger in a leaf beanie and poncho, a dwarf with a pompom beanie and mug, a cleric wrapped in a quilt holding a candle, a bard in a beret playing a ukulele, a grey tabby cat in a mustard scarf with a ball of yarn, a fox in a green scarf with a white-tipped tail, a bunny in a blue sweater hugging a carrot, an owl reading a red book.
+**Adventurers (16x16 chibi sprites, plum outline `#3b2433`, blush cheeks):** a knight with a scarf and cocoa, a wizard in a knit hat and sweater, a ranger in a leaf beanie and poncho, a dwarf with a pompom beanie and mug, a cleric wrapped in a quilt holding a candle, a bard in a beret playing a ukulele, a grey tabby cat in a mustard scarf with a ball of yarn, a fox in a green scarf with a white-tipped tail, a bunny in a blue sweater hugging a carrot, an owl reading a red book, a frog in a yellow raincoat, a bear in a red scarf holding a honey pot.
 
 ## How it behaves
 
@@ -53,7 +53,7 @@ The focused pane's border and the cursor are orange.
 - Clicking a machine header in the agents list folds it (a chevron shows while folded).
 - The sort icon opens a popup: Priority (most urgent first) or Grouped by space; either way the groups stay per machine and pinned agents come first in each.
 - The spaces list keeps the shipped behavior: click to switch, drag to reorder within a machine, right-click for the space menu, `+` for a new space on that machine, click a machine header to fold it.
-- Each space keeps its adventurer across restarts: a hash of the space name picks one, and the next free one if taken, so up to ten spaces never share.
+- Each space keeps its adventurer across restarts: a hash of the space name picks one, and the next free one if taken, so up to twelve spaces never share.
 
 ## Built from
 
@@ -70,7 +70,7 @@ The focused pane's border and the cursor are orange.
 
 - Departure Mono loads at start or on the next look change: restart Herdr (or change the theme once) after copying, or the headers fall back to the default font.
 - 84px pictures are 3.5 logical pixels per art pixel: crisp on a 2x Retina screen (7 device pixels), slightly uneven at 1x. Use 72 or 96 on a 1x screen.
-- Eleven or more spaces with agents repeat adventurers. Add sprites to `CHARS` in `sprites.py` and add their names to `AVATARS` in `main.js`.
+- Thirteen or more spaces with agents repeat adventurers. Add sprites to `CHARS` in `sprites.py` and add their names to `AVATARS` in `main.js`.
 - `SCENE_OF` in `pixel-agents/main.js` pins scenes by machine name (`{ vps: "den" }` here); a machine not listed gets a hashed scene.
 - The machine color table is duplicated in both mods (mods cannot import each other at run time); change both together.
 - Both mods are clones of Herdr 0.1.15's. A later Herdr may change the shipped mods; these stay as they are.

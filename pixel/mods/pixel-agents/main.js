@@ -1,3 +1,6 @@
+// Cozy Pixel: modified from the `agents` mod shipped with Herdr 0.1.15 (Apache License 2.0).
+// Changed: agents grouped by machine with scene names, and pixel-art cards with an adventurer per space.
+
 // Agents as pixel cards, grouped by machine; parents take their most urgent sub-agent's place.
 
 import { View, div, image, svg } from "gpui-kit";
@@ -63,7 +66,7 @@ const PIXEL = "Departure Mono"; // ships in mods/pixel-spaces/fonts
 const hash = (s) => [...(s ?? "")].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7);
 // Art from sprites.py. One adventurer per space: its hash picks one, the next free one
 // if taken (by name order). One scene per machine: this one is DUSK.
-const AVATARS = ["knight", "wizard", "ranger", "dwarf", "cleric", "bard", "cat", "fox", "bunny", "owl"];
+const AVATARS = ["knight", "wizard", "ranger", "dwarf", "cleric", "bard", "cat", "fox", "bunny", "owl", "frog", "bear"];
 const SCENES = ["dusk", "den", "grove", "keep", "cave"];
 // Picked scenes win over the hash: machine name -> scene.
 const SCENE_OF = { vps: "den" };
