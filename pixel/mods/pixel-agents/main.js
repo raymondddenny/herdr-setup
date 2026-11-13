@@ -1,5 +1,5 @@
 // Cozy Pixel: modified from the `agents` mod shipped with Herdr 0.1.15 (Apache License 2.0).
-// Changed: agents grouped by machine with scene names, pixel-art cards with a character per space, and switchable character packs.
+// Changed: agents grouped by machine with scene names, pixel-art cards with a character per space whose face and motion follow its state, and switchable character packs.
 
 // Agents as pixel cards, grouped by machine; parents take their most urgent sub-agent's place.
 
@@ -77,6 +77,20 @@ const SCENES = ["dusk", "den", "grove", "keep", "cave"];
 // Picked scenes win over the hash: machine name -> scene.
 const SCENE_OF = { vps: "den" };
 const sceneOf = (m) => (m ? SCENE_OF[m] ?? SCENES[1 + (hash(m) % (SCENES.length - 1))] : SCENES[0]);
+// Each state's face and motion: working bounces, needs-you shakes with a sweat drop,
+// done smiles, idle sleeps and breathes. The faces are drawn by sprites.py; the motions
+// run natively, so render does not re-run for them.
+const MOOD = {
+  working: { face: "", motion: ["top", { from: 0, to: -3.5, period: 560 }] },
+  blocked: { face: "-alert", motion: ["left", { from: -1.75, to: 1.75, period: 380 }] },
+  done: { face: "-happy" },
+  idle: { face: "-sleep", motion: ["top", { from: 0, to: 1.75, period: 3600 }] },
+};
+function avatar(path, status) {
+  const mood = MOOD[status] ?? MOOD.idle;
+  const el = image(path.replace(/\.svg$/, `${mood.face}.svg`)).absolute().top(0).left(0).size(84);
+  return mood.motion ? el.loop(...mood.motion) : el;
+}
 const scenePath = (m) => `mods/pixel-agents/scenes/${sceneOf(m)}${PACKS[packName()].festive ? "-xmas" : ""}.svg`;
 function avatarsFor(names) {
   const chars = PACKS[packName()].chars;
@@ -411,9 +425,9 @@ export default class Agents extends View {
           cx.notify();
         })
         .on_click(() => run("pane.focus", { pane: a.pane }))
-        .child(div().relative().size(86).flex_none().border(1).border_color(t.border)
+        .child(div().relative().size(86).flex_none().overflow_hidden().border(1).border_color(t.border)
           .child(image(scenePath(machineOf(a))).absolute().size(84))
-          .child(image(avatars.get(a.space_name || a.space)).absolute().size(84))
+          .child(avatar(avatars.get(a.space_name || a.space), a.status))
           .child(corner))
         .child(v_flex().flex_1().min_w(0).gap(5)
           .child(h_flex().gap(6).items_center()

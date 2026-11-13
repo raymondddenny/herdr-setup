@@ -10,6 +10,19 @@ The main piece is **Cozy Pixel**, a layout with a pixel-art sidebar: spaces and 
 Each space gets its own character, standing in its machine's scene: `DUSK` for this computer, then `DEN`, `GROVE`, `KEEP` or `CAVE` for the others.
 Characters come in packs, and you can switch packs with one command.
 
+### States
+
+Each character shows what its agent is doing:
+
+<table>
+<tr>
+<td align="center" width="25%"><img src="docs/states/working.svg" width="96" alt="Working"><br><b>Working</b><br>Bounces while it works.</td>
+<td align="center" width="25%"><img src="docs/states/blocked.svg" width="96" alt="Needs you"><br><b>Needs you</b><br>Shakes, with a sweat drop.</td>
+<td align="center" width="25%"><img src="docs/states/done.svg" width="96" alt="Done"><br><b>Done</b><br>Smiles until you look.</td>
+<td align="center" width="25%"><img src="docs/states/idle.svg" width="96" alt="Idle"><br><b>Idle</b><br>Asleep, breathing slowly.</td>
+</tr>
+</table>
+
 ### Cozy pack (default)
 
 <table>
@@ -169,7 +182,7 @@ Edit the installed copy in `~/.config/herdr-app/mods/pixel-agents/`, not the one
 
 1. Edit a grid in `sprites.py`, or add a new entry to `CHARS` there.
 2. Run `python3 sprites.py` in that folder. Herdr picks up the new SVGs right away.
-3. For a new character, also add its name to a pack's `chars` in `PACKS` in `main.js`. A new pack is a new entry in `PACKS`; `festive: true` makes it use the `-xmas` scenes.
+3. For a new character, also add its eye cells to `EYES` in `sprites.py` (for its sleeping and smiling faces), and its name to a pack's `chars` in `PACKS` in `main.js`. A new pack is a new entry in `PACKS`; `festive: true` makes it use the `-xmas` scenes.
 
 To pin a machine to a scene, add it to `SCENE_OF` in `main.js`, e.g. `{ vps: "den" }`.
 

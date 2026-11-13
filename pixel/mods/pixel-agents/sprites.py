@@ -498,6 +498,44 @@ KwWWWWWWKWWWWWwK
 }
 # Which characters belong to the festive pack (mirrors PACKS in main.js), so the README
 # images show them on the `-xmas` scenes.
+# Each character's eyes, as (x, y) cells per eye, for the faces of an agent's states.
+EYES = {
+  "knight": [[(5, 6)], [(10, 6)]], "wizard": [[(4, 8), (5, 8)], [(10, 8), (11, 8)]],
+  "ranger": [[(5, 7)], [(10, 7)]], "dwarf": [[(4, 6)], [(11, 6)]],
+  "cleric": [[(5, 6), (6, 6)], [(9, 6), (10, 6)]], "bard": [[(5, 7)], [(10, 7)]],
+  "cat": [[(3, 7), (4, 7)], [(10, 7), (11, 7)]], "fox": [[(3, 7)], [(11, 7)]],
+  "bunny": [[(4, 7)], [(10, 7)]], "owl": [[(4, 6)], [(10, 6)]],
+  "frog": [[(3, 3), (4, 3)], [(10, 3), (11, 3)]], "bear": [[(3, 6)], [(11, 6)]],
+  "raccoon": [[(3, 7)], [(11, 7)]], "penguin": [[(5, 6)], [(10, 6)]],
+  "hedgehog": [[(5, 7)], [(11, 7)]], "axolotl": [[(4, 6)], [(10, 6)]],
+  "capybara": [[(3, 7)], [(12, 7)]], "redpanda": [[(4, 7)], [(11, 7)]], "mouse": [[(4, 7)], [(11, 7)]],
+  "santa": [[(4, 7)], [(11, 7)]], "elf": [[(4, 9)], [(11, 9)]], "reindeer": [[(4, 6)], [(11, 6)]],
+  "snowman": [[(5, 6)], [(10, 6)]], "gingerbread": [[(5, 4)], [(10, 4)]],
+}
+DROP = [(21, 5, "#c8f0ff"), (20, 6, "#7fd8f0"), (21, 6, "#7fd8f0"), (20, 7, "#5fb8e0"), (21, 7, "#5fb8e0")]
+
+def face(name, mood):
+    """The grid with its eyes closed ("sleep": a line) or smiling ("happy": a ^ arc)."""
+    pal, art = CHARS[name]
+    g = [list(r.ljust(16, ".")) for r in art.split("\n") if r]
+    for i, eye in enumerate(EYES[name]):
+        y = eye[0][1]
+        xs = [x for x, _ in eye]
+        ink = g[y][xs[0]]
+        skin = g[y - 1][xs[0]]  # what's around the eye, taken from just above it
+        for x in xs:
+            g[y][x] = skin
+        if mood == "sleep":  # a two-cell line, one cell lower, drooping outward
+            out = -1 if i == 0 else 1
+            for x in sorted({*xs, xs[0] + out if i == 0 else xs[-1] + out}):
+                g[y + 1 if len(xs) > 1 else y][x] = ink
+        else:  # happy: the eye's cells move up a row, with a foot on either side
+            for x in xs:
+                g[y - 1][x] = ink
+            g[y][xs[0] - 1] = ink
+            g[y][xs[-1] + 1] = ink
+    return "\n".join("".join(r) for r in g)
+
 XMAS = ["santa", "elf", "reindeer", "snowman", "gingerbread"]
 OUTDOOR = {"dusk", "grove"}
 
@@ -520,12 +558,18 @@ def scene_body(name):  # "den", or "den-xmas" for its festive version
     rects = festive(name[:-5]) if name.endswith("-xmas") else SCENES[name]
     return "".join(rect(*r) for r in rects)
 
-def char_body(name, ox=4, oy=4):
+def char_body(name, ox=4, oy=4, mood=None):
+    """mood: None (eyes open), "sleep", "happy", or "alert" (open eyes and a sweat drop)."""
     pal, art = CHARS[name]
+    if mood in ("sleep", "happy"):
+        art = face(name, mood)
     pal = {"K": K, "S": SKIN, "p": NOSE, "c": BLUSH, **pal}
     rows = [r for r in art.split("\n") if r]
     assert len(rows) == 16 and all(len(r) <= 16 for r in rows), (name, len(rows))
-    return "".join(rect(ox + x, oy + y, 1, 1, pal[c]) for y, row in enumerate(rows) for x, c in enumerate(row) if c != ".")
+    body = "".join(rect(ox + x, oy + y, 1, 1, pal[c]) for y, row in enumerate(rows) for x, c in enumerate(row) if c != ".")
+    if mood == "alert":
+        body += "".join(rect(x, y, 1, 1, c) for x, y, c in DROP)
+    return body
 
 def write(kind, name, body):
     os.makedirs(f"{HERE}/{kind}", exist_ok=True)
@@ -553,11 +597,17 @@ def docs(out):
     for i, c in enumerate(XMAS):
         open(f"{out}/chars/{c}.svg", "w").write(svg(scene_body(xmas[i % len(xmas)]) + char_body(c)))
     open(f"{out}/chars/soon.svg", "w").write(svg(soon_body()))
+    os.makedirs(f"{out}/states", exist_ok=True)  # the fox in each agent state, for the README
+    for state, mood in (("working", None), ("blocked", "alert"), ("done", "happy"), ("idle", "sleep")):
+        open(f"{out}/states/{state}.svg", "w").write(svg(scene_body("dusk") + char_body("fox", mood=mood)))
     sheet(f"{out}/sprites.svg", cozy, plain)
     sheet(f"{out}/sprites-christmas.svg", XMAS, xmas)
 
 if __name__ == "__main__":
     for s in SCENES: write("scenes", s, scene_body(s)); write("scenes", f"{s}-xmas", scene_body(f"{s}-xmas"))
-    for c in CHARS: write("chars", c, char_body(c))
+    for c in CHARS:
+        write("chars", c, char_body(c))
+        for mood in ("sleep", "happy", "alert"):
+            write("chars", f"{c}-{mood}", char_body(c, mood=mood))
     if len(sys.argv) > 1: docs(sys.argv[1])
     print(sorted(SCENES), sorted(CHARS))
