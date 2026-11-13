@@ -1,8 +1,10 @@
 // Image and PDF preview pane. Open beside a terminal with
 //   pane.split {direction: "right", mod: "file-preview", props: {file: "/absolute/path"}}
 // (the Files panel does this on a click). image() only loads files inside Herdr's home,
-// so build.sh first copies or renders the file into PNG pages under .cache/ (hidden,
+// so build.sh links the image, or renders the PDF into PNG pages, under .cache/ (hidden,
 // so writing there does not reload this mod). This machine's files only.
+// Clean-up: a pane deletes its cache folder when it closes; folders older than a day
+// (left by a crash or a quit) go the next time a preview opens.
 
 import { View, div, image } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
@@ -32,6 +34,9 @@ export default class FilePreview extends View {
     if (st.code !== 0) throw new Error("File not found.");
     const rel = `mods/file-preview/.cache/${hash(`${file}\u0000${st.stdout.trim()}`)}`;
     const home = appHome();
+    this.dir = `${home}/${rel}`;
+    // Leftovers older than a day; folders only, so the compiled pdf2png stays.
+    await exec("find", [`${home}/mods/file-preview/.cache`, "-mindepth", "1", "-maxdepth", "1", "-type", "d", "-mmin", "+1440", "-exec", "rm", "-rf", "{}", "+"]).catch(() => null);
     const r = await exec("sh", [`${home}/mods/file-preview/build.sh`, file, `${home}/${rel}`], { timeout: 120000 });
     if (r.code !== 0) throw new Error(r.stderr.trim().split("\n").pop() || "Couldn't render this file.");
     const manifest = await readTextFile(`${home}/${rel}/manifest`);
@@ -41,6 +46,11 @@ export default class FilePreview extends View {
     });
     if (!pages.length) throw new Error("Nothing to show (a locked or empty PDF?).");
     return pages;
+  }
+
+  // The pictures stay in memory for this run; only the files on disk go.
+  async close() {
+    if (this.dir) await exec("rm", ["-rf", this.dir]);
   }
 
   // One picture fits the pane; pages fill its width and scroll.
