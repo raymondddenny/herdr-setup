@@ -301,6 +301,24 @@ KWWDDWWnWWDDWWK.
 .KGTTTTTTTKChCK.
 ..KTTTTTTTTKCCK.
 ..KKKKKKKKKKKK.."""),
+  # Penguin in pink earmuffs and a red striped scarf.
+  "penguin": ({"N": "#2e3a5a", "W": "#f4f6fb", "O": "#f2a03a", "P": "#f28aa0", "B": "#e05a6a", "b": "#f2d2a0"}, """
+................
+.....KKKKKK.....
+...KKNNNNNNKK...
+..KNNNNNNNNNNK..
+.PKNNNNNNNNNNKP.
+PPKNWWWNNWWWNKPP
+PPKNWKWWWWKWNKPP
+.PKNWcWOOWcWNKP.
+..KNWWWWWWWWNK..
+...KNWWWWWWNK...
+..KBBBBBBBBBBK..
+.KNNBbBWWWWNNNK.
+KNNKWWWWWWWWKNNK
+KNKWWWWWWWWWWKNK
+.KKWWWWWWWWWWKK.
+...KOOK..KOOK..."""),
   # Christmas pack.
   "santa": ({"W": "#f4f6fb", "R": "#d8504a", "B": "#3b2433", "Y": "#f2c23a"}, """
 ..........WW....

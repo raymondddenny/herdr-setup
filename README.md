@@ -33,7 +33,7 @@ Characters come in packs, and you can switch packs with one command.
 </tr>
 <tr>
 <td align="center"><img src="docs/chars/raccoon.svg" width="96" alt="Raccoon"><br><b>Raccoon</b><br>Teal hoodie, sneaking a cookie.</td>
-<td></td>
+<td align="center"><img src="docs/chars/penguin.svg" width="96" alt="Penguin"><br><b>Penguin</b><br>Pink earmuffs and a red striped scarf.</td>
 <td></td>
 <td></td>
 </tr>
@@ -60,6 +60,8 @@ The scenes go festive too: a garland of lights everywhere, and snow on the porch
 
 ### Switch packs
 
+Press `cmd-alt-p` while the Cozy Pixel layout is shown to cycle packs, or use a terminal:
+
 ```sh
 herdr-app do pixel-agents.next-pack        # cycle: Cozy -> Christmas -> Cozy
 herdr-app do pixel-agents.pack-christmas   # pick one by name
@@ -72,7 +74,6 @@ A toast confirms the switch, and the choice survives restarts.
 
 <table>
 <tr>
-<td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Penguin</b><br>Coming soon</td>
 <td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Hedgehog</b><br>Coming soon</td>
 <td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Axolotl</b><br>Coming soon</td>
 </tr>
@@ -97,6 +98,8 @@ herdr-app check ~/.config/herdr-app/mods/pixel-spaces
 herdr-app check ~/.config/herdr-app/mods/pixel-agents
 herdr-app do layout.switch '{"name":"pixel"}'
 ```
+
+For the `cmd-alt-p` pack shortcut, add the `layout:pixel` section from `pixel/keys.json` to your `~/.config/herdr-app/keys.json` (merge it; don't replace the file).
 
 Restart Herdr once so the pixel font loads.
 `ctrl-shift-l` switches back to your previous layout.
@@ -126,7 +129,7 @@ Fork this repo, copy your edited files into your fork's `pixel/mods/pixel-agents
 
 | Path | What it is |
 |---|---|
-| `pixel/` | The Cozy Pixel layout, in the herdr.dev layout format (`RECIPE.md`, `preview.png`, `layouts/`, `themes/`, `mods/`). |
+| `pixel/` | The Cozy Pixel layout, in the herdr.dev layout format (`RECIPE.md`, `preview.png`, `layouts/`, `themes/`, `mods/`, `keys.json`). |
 | `home/` | My `settings.json` and `keys.json`. |
 | `docs/` | The README images: one card per character and the full sprite sheets. |
 | `sync.sh` | Copies the live setup from `~/.config/herdr-app` into this repo. |
