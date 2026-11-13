@@ -2,9 +2,9 @@
 // Claude Code pipes `rate_limits` into its status line command; bin/claude-usage-tap
 // saves it to .cache/usage.json (hidden, so writing there does not reload this mod).
 
-import { View, div } from "gpui-kit";
+import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { theme, appHome, readTextFile, layout, exec, notify } from "herdr";
+import { theme, appHome, readTextFile, layout, exec, notify, nextCommand } from "herdr";
 
 const PIXEL = "Departure Mono"; // ships in mods/pixel-spaces/fonts
 const CELLS = 14;
@@ -31,6 +31,12 @@ function left(sec, now) {
   return h < 24 ? `${h}H ${pad(m % 60)}M` : `${Math.floor(h / 24)}D ${pad(h % 24)}H`;
 }
 
+// How long ago the numbers were confirmed: "NOW", "4M AGO", "2H AGO".
+function ago(sec, now) {
+  const m = Math.floor((now - sec) / 60);
+  return m < 1 ? "NOW" : m < 60 ? `${m}M AGO` : m < 1440 ? `${Math.floor(m / 60)}H AGO` : `${Math.floor(m / 1440)}D AGO`;
+}
+
 // A reset moment: its time for the session ("16:00"), its date for the week ("NOV 13").
 function stamp(sec, long) {
   const d = new Date(sec * 1000);
@@ -43,6 +49,10 @@ export default class ClaudeUsage extends View {
     this.limits = null;
     this.load(cx);
     cx.timer.every(30000, (cx) => this.load(cx));
+    // `herdr-app do claude-usage.refresh` does what the refresh button does.
+    cx.spawn(async (cx) => {
+      for (;;) if ((await nextCommand()) === "refresh") this.refresh(cx);
+    });
   }
 
   // Also puts the tap back if something reset Claude Code's status line (Orca does when
@@ -54,6 +64,19 @@ export default class ClaudeUsage extends View {
       const text = await readTextFile(this.file).catch(() => null);
       try { this.limits = text ? JSON.parse(text) : null; } catch { /* half-written; next time */ }
       cx.notify();
+    });
+  }
+
+  // The refresh button: asks Anthropic for the current numbers, signed in as Claude Code.
+  refresh(cx) {
+    if (this.busy) return;
+    this.busy = true;
+    cx.notify();
+    cx.spawn(async (cx) => {
+      const r = await exec("python3", [`${appHome()}/bin/claude-usage-tap`, "--fetch"], { timeout: 30000 }).catch((e) => ({ code: 1, stderr: String(e.message ?? e) }));
+      this.busy = false;
+      if (r.code !== 0) notify({ title: "Couldn't refresh Claude usage", body: (r.stderr ?? "").trim().split("\n").pop() || "Unknown error.", level: "warning" });
+      this.load(cx);
     });
   }
 
@@ -103,7 +126,13 @@ export default class ClaudeUsage extends View {
     return root.px(16).pt(14).gap(10)
       .child(h_flex().justify_between().text_color(t.dim)
         .child(h_flex().gap(7).child(div().text_color(t.input).child("▒▒")).child("USAGE"))
-        .child("CLAUDE"))
+        .child(h_flex().gap(8).items_center()
+          .when(Boolean(this.limits?.at), (el) => el.child(this.busy ? "CHECKING" : ago(this.limits.at, now)))
+          .child(div().id("refresh").flex_none().cursor_pointer().text_color(this.busy ? t.input : t.dim)
+            .hover((s) => s.text_color(t.foreground))
+            .tooltip("Check Claude usage now")
+            .on_click((_e, cx) => this.refresh(cx))
+            .child(svg(this.busy ? "mods/workspace-chrome/spinner.svg" : "mods/claude-usage/refresh.svg").size(12)))))
       .when(!session && !week, (el) => el.child(div().text_size(11.5).text_color(t.dim)
         .child("Shows after Claude Code's next reply (Pro and Max plans).")))
       .when(Boolean(session), (el) => el.child(this.row("SESSION", session, t)))

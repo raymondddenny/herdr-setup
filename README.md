@@ -125,9 +125,12 @@ Bars turn orange at 70% and red at 90%.
 Once a reset time passes, the row shows 0% and a green `RESET` until Claude Code sends the new numbers.
 
 - The numbers come from Claude Code itself: it sends them to its status line command after each reply, and `bin/claude-usage-tap` saves them for Herdr.
-  Nothing is fetched from the internet and no login token is read.
+  The block updates within 30 seconds of a Claude Code reply in any terminal.
+- The header says how fresh the numbers are (`NOW`, `7M AGO`).
+  The **↻** button, or `herdr-app do claude-usage.refresh`, asks Anthropic for the current numbers right away, the same ones `/usage` shows.
+  To do that it uses Claude Code's login from your macOS Keychain: the token stays in memory, is never saved or logged, and only goes to `api.anthropic.com`.
+  It uses the endpoint Claude Code's own `/usage` uses, which isn't a public API and could change.
 - Pro and Max plans only; API-key usage has no plan limits to show.
-- The block updates within 30 seconds of a Claude Code reply in any terminal.
 
 ## Install
 
@@ -156,7 +159,7 @@ Restart Herdr once so the pixel font loads.
 `ctrl-shift-l` switches back to your previous layout.
 
 The spaces mod runs `git` in each space's folder and `hc machine` commands, the same as Herdr's own spaces list.
-None of the mods downloads anything from the internet.
+None of the mods downloads anything from the internet; the only network call is the usage refresh button, to `api.anthropic.com`.
 
 <details>
 <summary><b>Change the art</b></summary>

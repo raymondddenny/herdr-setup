@@ -13,17 +13,29 @@ prints whatever that prints.
                                exists); the USAGE block runs it every 30s, so a tool that
                                resets the status line (Orca does) gets chained, not lost.
                                Prints "repaired" when it changed something.
+  claude-usage-tap --fetch     ask Anthropic for the current numbers now (the USAGE block's
+                               refresh button), signed in as Claude Code: its login comes
+                               from the macOS Keychain (or ~/.claude/.credentials.json),
+                               stays in memory and goes only to api.anthropic.com.
+
+usage.json holds `five_hour` and `seven_day` ({used_percentage, resets_at in epoch
+seconds}) plus `at`, when the numbers were last confirmed.
 """
 import json
 import os
 import subprocess
 import sys
+import time
+import urllib.error
+import urllib.request
+from datetime import datetime
 
 HOME = os.path.expanduser("~/.config/herdr-app")
 OUT = f"{HOME}/mods/claude-usage/.cache/usage.json"
 NEXT = f"{HOME}/bin/claude-usage-next"
 SETTINGS = os.path.join(os.environ.get("CLAUDE_CONFIG_DIR") or os.path.expanduser("~/.claude"), "settings.json")
 COMMAND = 'python3 "$HOME/.config/herdr-app/bin/claude-usage-tap"'
+USAGE_URL = "https://api.anthropic.com/api/oauth/usage"
 
 
 def install():
@@ -44,19 +56,27 @@ def install():
     return True
 
 
+def save(limits):
+    """Writes the numbers when they changed, or a minute after the last write (to move `at`)."""
+    old = {}
+    if os.path.exists(OUT):
+        with open(OUT) as f:
+            old = json.load(f)
+    now = int(time.time())
+    if limits == {k: v for k, v in old.items() if k != "at"} and now - old.get("at", 0) < 60:
+        return
+    os.makedirs(os.path.dirname(OUT), exist_ok=True)
+    with open(OUT + ".tmp", "w") as f:
+        json.dump({**limits, "at": now}, f)
+    os.replace(OUT + ".tmp", OUT)
+
+
 def tap():
     raw = sys.stdin.buffer.read()
     try:
         limits = json.loads(raw).get("rate_limits")
-        old = None
-        if os.path.exists(OUT):
-            with open(OUT) as f:
-                old = json.load(f)
-        if limits and limits != old:
-            os.makedirs(os.path.dirname(OUT), exist_ok=True)
-            with open(OUT + ".tmp", "w") as f:
-                json.dump(limits, f)
-            os.replace(OUT + ".tmp", OUT)
+        if limits:
+            save({k: limits[k] for k in ("five_hour", "seven_day") if k in limits})
     except Exception:  # never break the status line over this
         pass
     cmd = open(NEXT).read().strip() if os.path.exists(NEXT) else ""
@@ -68,10 +88,58 @@ def tap():
             pass
 
 
+def login():
+    """Claude Code's OAuth login, or None."""
+    r = subprocess.run(["security", "find-generic-password", "-s", "Claude Code-credentials", "-w"],
+                       capture_output=True, text=True, timeout=10)
+    text = r.stdout if r.returncode == 0 else ""
+    path = os.path.expanduser("~/.claude/.credentials.json")
+    if not text and os.path.exists(path):
+        with open(path) as f:
+            text = f.read()
+    try:
+        return json.loads(text).get("claudeAiOauth")
+    except ValueError:
+        return None
+
+
+def fetch():
+    """Exits with a short reason on failure (the block shows it in a toast)."""
+    cred = login()
+    if not cred or not cred.get("accessToken"):
+        sys.exit("No Claude Code login found. Sign in to Claude Code first.")
+    if cred.get("expiresAt", 0) / 1000 < time.time():
+        sys.exit("Claude Code's login has expired. Open Claude Code once to renew it.")
+    req = urllib.request.Request(USAGE_URL, headers={
+        "Authorization": f"Bearer {cred['accessToken']}",
+        "anthropic-beta": "oauth-2025-04-20",
+        "User-Agent": "herdr-claude-usage",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            body = json.load(resp)
+    except urllib.error.HTTPError as e:
+        sys.exit("Claude Code's login was refused. Open Claude Code once to renew it." if e.code in (401, 403)
+                 else f"Anthropic answered {e.code}. Try again in a minute.")
+    except (urllib.error.URLError, TimeoutError, ValueError):
+        sys.exit("Couldn't reach Anthropic. Check the connection.")
+    limits = {}
+    for k in ("five_hour", "seven_day"):
+        w = body.get(k) or {}
+        if w.get("resets_at"):
+            limits[k] = {"used_percentage": w.get("utilization") or 0,
+                         "resets_at": round(datetime.fromisoformat(w["resets_at"]).timestamp())}
+    if not limits:
+        sys.exit("No plan limits on this login (Pro and Max plans only).")
+    save(limits)
+
+
 if __name__ == "__main__":
     arg = sys.argv[1] if len(sys.argv) > 1 else ""
     if arg == "--install":
         print("installed" if install() else "already installed")
+    elif arg == "--fetch":
+        fetch()
     elif arg == "--ensure":
         if os.path.exists(NEXT) and os.path.exists(SETTINGS) and install():
             print("repaired")
