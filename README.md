@@ -43,17 +43,28 @@ cp home/settings.json home/keys.json ~/.config/herdr-app/
 
 ## Change the art
 
-The scenes and adventurers are text grids in `pixel/mods/pixel-agents/sprites.py`.
-Edit a grid or add a character, run `python3 sprites.py` in that folder, and Herdr picks up the new SVGs right away.
-To pin a machine to a scene, add it to `SCENE_OF` in `pixel/mods/pixel-agents/main.js`.
+Anyone who installed Cozy Pixel can change its art on their own machine.
+Edit the installed copy in `~/.config/herdr-app/mods/pixel-agents/`, not the one in this repo: Herdr only reads its own folder.
 
-## Keep this repo in sync
+1. Edit a grid in `sprites.py`, or add a new entry to `CHARS` there.
+2. Run `python3 sprites.py` in that folder. Herdr picks up the new SVGs right away.
+3. For a new character, also add its name to `AVATARS` in `main.js`.
 
-After changing anything in the app:
+To pin a machine to a scene, add it to `SCENE_OF` in `main.js`, e.g. `{ vps: "den" }`.
+
+Want to share your changes back?
+Fork this repo, copy your edited files into your fork's `pixel/mods/pixel-agents/`, and open a pull request.
+
+## Keep this repo in sync (owner)
+
+This repo is my backup.
+After changing anything in the app, I copy the live files in and push:
 
 ```sh
-./sync.sh && git add -A && git commit -m "Sync Herdr setup"
+./sync.sh && git add -A && git commit -m "Sync Herdr setup" && git push
 ```
+
+In a fork, `sync.sh` works the same way, but it also copies your own `settings.json` and `keys.json` into `home/`.
 
 ## Credits
 
