@@ -6,6 +6,13 @@ includes `rate_limits` (5-hour session and weekly use). This saves that part to
 mods/claude-usage/.cache/usage.json, only when it changed, then hands the same payload to
 the status line command that was set before (kept verbatim in claude-usage-next) and
 prints whatever that prints.
+
+  claude-usage-tap --install   point ~/.claude/settings.json's status line here, keeping
+                               the old command as the next one (run once to opt in)
+  claude-usage-tap --ensure    the same, but only once installed (claude-usage-next
+                               exists); the USAGE block runs it every 30s, so a tool that
+                               resets the status line (Orca does) gets chained, not lost.
+                               Prints "repaired" when it changed something.
 """
 import json
 import os
@@ -15,26 +22,58 @@ import sys
 HOME = os.path.expanduser("~/.config/herdr-app")
 OUT = f"{HOME}/mods/claude-usage/.cache/usage.json"
 NEXT = f"{HOME}/bin/claude-usage-next"
+SETTINGS = os.path.join(os.environ.get("CLAUDE_CONFIG_DIR") or os.path.expanduser("~/.claude"), "settings.json")
+COMMAND = 'python3 "$HOME/.config/herdr-app/bin/claude-usage-tap"'
 
-raw = sys.stdin.buffer.read()
-try:
-    limits = json.loads(raw).get("rate_limits")
-    old = None
-    if os.path.exists(OUT):
-        with open(OUT) as f:
-            old = json.load(f)
-    if limits and limits != old:
-        os.makedirs(os.path.dirname(OUT), exist_ok=True)
-        with open(OUT + ".tmp", "w") as f:
-            json.dump(limits, f)
-        os.replace(OUT + ".tmp", OUT)
-except Exception:  # never break the status line over this
-    pass
 
-cmd = open(NEXT).read().strip() if os.path.exists(NEXT) else ""
-if cmd:
+def install():
+    """Returns True when it changed settings.json."""
+    with open(SETTINGS) as f:
+        settings = json.load(f)
+    old = (settings.get("statusLine") or {}).get("command", "")
+    if "claude-usage-tap" in old:
+        if not os.path.exists(NEXT):
+            open(NEXT, "w").close()
+        return False
+    with open(NEXT, "w") as f:  # the replaced command runs after the tap from now on
+        f.write(old + "\n" if old else "")
+    settings["statusLine"] = {**(settings.get("statusLine") or {}), "type": "command", "command": COMMAND}
+    with open(SETTINGS + ".herdr-tmp", "w") as f:
+        f.write(json.dumps(settings, indent=2, ensure_ascii=False) + "\n")
+    os.replace(SETTINGS + ".herdr-tmp", SETTINGS)
+    return True
+
+
+def tap():
+    raw = sys.stdin.buffer.read()
     try:
-        r = subprocess.run(["sh", "-c", cmd], input=raw, stdout=subprocess.PIPE, timeout=10)
-        sys.stdout.buffer.write(r.stdout)
-    except (OSError, subprocess.TimeoutExpired):
+        limits = json.loads(raw).get("rate_limits")
+        old = None
+        if os.path.exists(OUT):
+            with open(OUT) as f:
+                old = json.load(f)
+        if limits and limits != old:
+            os.makedirs(os.path.dirname(OUT), exist_ok=True)
+            with open(OUT + ".tmp", "w") as f:
+                json.dump(limits, f)
+            os.replace(OUT + ".tmp", OUT)
+    except Exception:  # never break the status line over this
         pass
+    cmd = open(NEXT).read().strip() if os.path.exists(NEXT) else ""
+    if cmd:
+        try:
+            r = subprocess.run(["sh", "-c", cmd], input=raw, stdout=subprocess.PIPE, timeout=10)
+            sys.stdout.buffer.write(r.stdout)
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+
+
+if __name__ == "__main__":
+    arg = sys.argv[1] if len(sys.argv) > 1 else ""
+    if arg == "--install":
+        print("installed" if install() else "already installed")
+    elif arg == "--ensure":
+        if os.path.exists(NEXT) and os.path.exists(SETTINGS) and install():
+            print("repaired")
+    else:
+        tap()

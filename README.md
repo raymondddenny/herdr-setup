@@ -140,13 +140,15 @@ herdr-app do layout.switch '{"name":"pixel"}'
 
 For the **⌘⌥P** pack and **⌘⌥S** simulator shortcuts, add the `layout:pixel` section from `pixel/keys.json` to your `~/.config/herdr-app/keys.json` (merge it; don't replace the file).
 
-For the Claude usage block, point Claude Code's status line at the tap in `~/.claude/settings.json`:
+For the Claude usage block, point Claude Code's status line at the tap once:
 
-```json
-"statusLine": { "type": "command", "command": "python3 \"$HOME/.config/herdr-app/bin/claude-usage-tap\"" }
+```sh
+python3 ~/.config/herdr-app/bin/claude-usage-tap --install
 ```
 
-If you already had a status line command, put it in `~/.config/herdr-app/bin/claude-usage-next`; the tap passes everything on to it, so it keeps working.
+This sets `statusLine` in `~/.claude/settings.json` and keeps any status line command you had as the next one in line, so it keeps working.
+If another tool later resets the status line (Orca does when it updates), the USAGE block puts the tap back within 30 seconds, keeps that tool's new command running after it, and shows a toast.
+To opt out, delete `~/.config/herdr-app/bin/claude-usage-next` first (that stops the repairs), then set your status line back.
 
 Restart Herdr once so the pixel font loads.
 `ctrl-shift-l` switches back to your previous layout.

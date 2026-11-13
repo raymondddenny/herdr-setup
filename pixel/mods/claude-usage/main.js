@@ -4,7 +4,7 @@
 
 import { View, div } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { theme, appHome, readTextFile, layout } from "herdr";
+import { theme, appHome, readTextFile, layout, exec, notify } from "herdr";
 
 const PIXEL = "Departure Mono"; // ships in mods/pixel-spaces/fonts
 const CELLS = 14;
@@ -38,8 +38,12 @@ export default class ClaudeUsage extends View {
     cx.timer.every(30000, (cx) => this.load(cx));
   }
 
+  // Also puts the tap back if something reset Claude Code's status line (Orca does when
+  // it updates); the replaced command is kept and still runs after the tap.
   load(cx) {
     cx.spawn(async (cx) => {
+      const fix = await exec("python3", [`${appHome()}/bin/claude-usage-tap`, "--ensure"]).catch(() => null);
+      if (fix?.stdout.includes("repaired")) notify({ title: "Claude usage", body: "Re-added the status line tap; your other status line still runs after it." });
       const text = await readTextFile(this.file).catch(() => null);
       try { this.limits = text ? JSON.parse(text) : null; } catch { /* half-written; next time */ }
       cx.notify();
