@@ -79,14 +79,31 @@ A toast confirms the switch, and the choice survives restarts.
 
 </details>
 
+## Image and PDF previews
+
+Click an image or a PDF in the Files panel (the **Files** button, top right) and it opens in a pane beside your terminal.
+A single image fits the pane; a PDF shows every page, fit to the pane's width, and scrolls.
+**Open in Preview** opens the file in macOS Preview.
+
+From a terminal, add this to your `~/.zshrc`:
+
+```sh
+hview() { herdr-app do pane.split "{\"direction\":\"right\",\"mod\":\"file-preview\",\"props\":{\"file\":\"$(cd "$(dirname "$1")" && pwd)/$(basename "$1")\"}}"; }
+```
+
+Then `hview report.pdf` or `hview photo.png` opens it the same way.
+
+- Formats: PNG, JPEG, GIF, WebP, SVG and PDF, plus HEIC, TIFF and BMP (converted by macOS).
+- macOS only, and only files on this computer (not on a connected remote machine).
+- PDFs are rendered with macOS PDFKit. The first PDF compiles a small renderer once, which takes a few seconds; this needs the Xcode Command Line Tools (`xcode-select --install`).
+
 ## Install
 
 Copy the layout into your Herdr app home, then switch to it:
 
 ```sh
 cp -R pixel/layouts pixel/themes pixel/mods ~/.config/herdr-app/
-herdr-app check ~/.config/herdr-app/mods/pixel-spaces
-herdr-app check ~/.config/herdr-app/mods/pixel-agents
+for m in pixel-spaces pixel-agents pixel-files file-preview; do herdr-app check ~/.config/herdr-app/mods/$m; done
 herdr-app do layout.switch '{"name":"pixel"}'
 ```
 

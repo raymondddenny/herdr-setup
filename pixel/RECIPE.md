@@ -56,6 +56,8 @@ The focused pane's border and the cursor are orange.
 - Character packs: Cozy (default, 16 characters on the normal scenes) and Christmas (santa, elf, reindeer, snowman, gingerbread on festive scenes: a garland of lights, snow on DUSK and GROVE). ⌘⌥P on a Mac (`cmd-alt-p`, bound in `keys.json` under `layout:pixel`, so only while this layout shows) and `herdr-app do pixel-agents.next-pack` cycle them and `pixel-agents.pack-<name>` picks one; a toast confirms, an unknown name shows a warning and changes nothing. The choice is shared state `pixel.pack`, so it survives restarts.
 - Each space keeps its adventurer across restarts: a hash of the space name picks one, and the next free one if taken, so up to twelve spaces never share.
 
+- Image and PDF previews: clicking an image or PDF on this computer in the Files panel closes any `file-preview` pane in the tab, splits a new one to the right with `{file}`, and gives the keyboard back to the pane that had it (so the Files panel keeps its folder). One image fits the pane (never upscaled); PDF pages fill the pane's width and scroll, each with `n / total` under it. The header shows the file name, the page count and an "Open in Preview" button (`exec("open", [file])`).
+
 ## Built from
 
 - `layouts/pixel.json`: a clone of `main` (`layout.clone`) with root `"theme": "pixel"`, `"font_size": 13`, `sidebar` at `{ "px": 296 }`, `agents` at `{ "weight": 1.6 }`, and the `spaces` and `agents` blocks pointing at `pixel-spaces` and `pixel-agents`.
@@ -63,6 +65,8 @@ The focused pane's border and the cursor are orange.
 - `mods/pixel-spaces`: a clone of the shipped `spaces` mod with a new header, machine headers and rows. It keeps the shipped git lookups (`exec("git", ...)` per space folder, on remote machines too) and `hc machine ls` / `hc machine add` for machine status and reconnecting. It ships the font in `fonts/` (Departure Mono, SIL OFL 1.1).
 - `mods/pixel-agents`: a clone of the shipped `agents` mod. Agents are grouped by `machineOf(a)` (the address prefix before `/`), and `setAgentOrder` gets the same machine-grouped order so `agent.next` follows the cards.
   The scene is `SCENE_OF[machine]` if set, else picked by a hash of the machine name from `den`, `grove`, `keep`, `cave`; this computer is always `dusk`.
+- `mods/pixel-files`: a clone of the shipped `files` mod; `show()` hands images and PDFs (`png jpg jpeg gif webp svg pdf heic tif tiff bmp`) to `file-preview` when the panel's folder is on this computer. The layout's `files` block points at it.
+- `mods/file-preview`: a pane mod. `image()` loads only files inside Herdr's home, so `build.sh` copies or renders the file into `mods/file-preview/.cache/<hash of path and mtime>/` (hidden, so writes there don't reload the mod) with a `manifest` of `<page> <width> <height>` lines. PDFs go through `pdf2png.swift` (PDFKit, 2x, first 300 pages), compiled once with `swiftc` into `.cache/pdf2png`; HEIC, TIFF and BMP go through `sips`.
 - The pictures are `image()` of SVGs in `mods/pixel-agents/scenes/` and `chars/`, with `shape-rendering="crispEdges"`. `sprites.py` draws them from text grids and rewrites them when run.
 - Icons come from the shipped `mods/workspace-chrome/*.svg`.
 - Neither mod downloads anything from the internet (`hc machine add` reconnects a machine over its own SSH target).
