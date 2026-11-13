@@ -50,6 +50,16 @@
           ]
         },
         {
+          "id": "usage",
+          "type": "block",
+          "content": {
+            "mod": "claude-usage"
+          },
+          "size": {
+            "px": 128
+          }
+        },
+        {
           "id": "sidebar-footer",
           "type": "block",
           "content": {
@@ -171,6 +181,8 @@
     }
   ],
   "background": "canvas",
+  "theme": "pixel",
+  "font_size": 13,
   "terminal_padding": [
     14,
     12
@@ -183,7 +195,5 @@
   "traffic_lights": [
     12,
     16
-  ],
-  "theme": "pixel",
-  "font_size": 13
+  ]
 }

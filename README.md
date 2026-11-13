@@ -117,6 +117,16 @@ Press **⌘⌥S** (Command-Option-S) to open a booted iOS simulator or Android d
 - Android works fully with `adb`.
 - It draws with the Kitty graphics protocol, which Herdr terminals support, so each frame replaces the last and memory stays flat.
 
+## Claude usage
+
+The **USAGE** block at the bottom of the sidebar shows how much of your Claude plan you've used: the 5-hour session and the week, each with a pixel bar and when it resets.
+Bars turn orange at 70% and red at 90%.
+
+- The numbers come from Claude Code itself: it sends them to its status line command after each reply, and `bin/claude-usage-tap` saves them for Herdr.
+  Nothing is fetched from the internet and no login token is read.
+- Pro and Max plans only; API-key usage has no plan limits to show.
+- The block updates within 30 seconds of a Claude Code reply in any terminal.
+
 ## Install
 
 Copy the layout into your Herdr app home, then switch to it:
@@ -124,17 +134,25 @@ Copy the layout into your Herdr app home, then switch to it:
 ```sh
 cp -R pixel/layouts pixel/themes pixel/mods pixel/bin ~/.config/herdr-app/
 ln -sf ~/.config/herdr-app/bin/herdr-sim ~/.local/bin/herdr-sim
-for m in pixel-spaces pixel-agents pixel-files file-preview; do herdr-app check ~/.config/herdr-app/mods/$m; done
+for m in pixel-spaces pixel-agents pixel-files file-preview claude-usage; do herdr-app check ~/.config/herdr-app/mods/$m; done
 herdr-app do layout.switch '{"name":"pixel"}'
 ```
 
 For the **⌘⌥P** pack and **⌘⌥S** simulator shortcuts, add the `layout:pixel` section from `pixel/keys.json` to your `~/.config/herdr-app/keys.json` (merge it; don't replace the file).
 
+For the Claude usage block, point Claude Code's status line at the tap in `~/.claude/settings.json`:
+
+```json
+"statusLine": { "type": "command", "command": "python3 \"$HOME/.config/herdr-app/bin/claude-usage-tap\"" }
+```
+
+If you already had a status line command, put it in `~/.config/herdr-app/bin/claude-usage-next`; the tap passes everything on to it, so it keeps working.
+
 Restart Herdr once so the pixel font loads.
 `ctrl-shift-l` switches back to your previous layout.
 
 The spaces mod runs `git` in each space's folder and `hc machine` commands, the same as Herdr's own spaces list.
-Neither mod downloads anything from the internet.
+None of the mods downloads anything from the internet.
 
 <details>
 <summary><b>Change the art</b></summary>

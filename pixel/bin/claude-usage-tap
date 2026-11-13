@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""Claude Code status line tap for Herdr's USAGE block.
+
+Claude Code pipes a JSON payload into its status line command; for Pro and Max plans it
+includes `rate_limits` (5-hour session and weekly use). This saves that part to
+mods/claude-usage/.cache/usage.json, only when it changed, then hands the same payload to
+the status line command that was set before (kept verbatim in claude-usage-next) and
+prints whatever that prints.
+"""
+import json
+import os
+import subprocess
+import sys
+
+HOME = os.path.expanduser("~/.config/herdr-app")
+OUT = f"{HOME}/mods/claude-usage/.cache/usage.json"
+NEXT = f"{HOME}/bin/claude-usage-next"
+
+raw = sys.stdin.buffer.read()
+try:
+    limits = json.loads(raw).get("rate_limits")
+    old = None
+    if os.path.exists(OUT):
+        with open(OUT) as f:
+            old = json.load(f)
+    if limits and limits != old:
+        os.makedirs(os.path.dirname(OUT), exist_ok=True)
+        with open(OUT + ".tmp", "w") as f:
+            json.dump(limits, f)
+        os.replace(OUT + ".tmp", OUT)
+except Exception:  # never break the status line over this
+    pass
+
+cmd = open(NEXT).read().strip() if os.path.exists(NEXT) else ""
+if cmd:
+    try:
+        r = subprocess.run(["sh", "-c", cmd], input=raw, stdout=subprocess.PIPE, timeout=10)
+        sys.stdout.buffer.write(r.stdout)
+    except (OSError, subprocess.TimeoutExpired):
+        pass
