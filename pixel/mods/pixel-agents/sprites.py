@@ -207,6 +207,42 @@ KWWcOOOOOOOcWWK.
 .KOOOWWWWOOOKOOK
 .KOOWWWWWWOOKOWK
 ..KKKKKKKKKKKKK."""),
+  # Bunny in a blue knit sweater, hugging a carrot.
+  "bunny": ({"W": "#f4ecf0", "e": "#f2a0a8", "n": "#f28a8a", "V": "#8ab4f0", "v": "#6a94d0", "C": "#f08a3a", "G": "#7fc060"}, """
+...KK.....KK....
+..KWeK...KeWK...
+..KWeK...KeWK...
+..KWeK...KeWK...
+...KWKKKKKWK....
+..KWWWWWWWWWK...
+.KWWWWWWWWWWWK..
+.KWWKWWWWWKWWK..
+.KWcWWWnWWWcWK..
+.KWWWWKWKWWWWK..
+..KWWWWWWWWWK...
+..KVVVVVVVVVKGK.
+.KWVVvVVvVVKCCK.
+.KWVVVVVVVKCCK..
+..KVVvVVvVVKCK..
+..KKKKKKKKKKKK.."""),
+  # Little scholar owl with big eyes, reading a red book.
+  "owl": ({"B": "#8a5a3a", "W": "#fbeedd", "F": "#e8c89a", "f": "#c8a070", "Y": "#f2b34a", "R": "#c8504a", "r": "#f2e6d0"}, """
+................
+..KK.......KK...
+..KBK.....KBK...
+..KBBKKKKKBBK...
+.KBBBBBBBBBBBK..
+.KBWWWBBBWWWBK..
+KBWWKWWBWWKWWBK.
+KBWWWWWBWWWWWBK.
+KBBWWWBYBWWWBBK.
+.KBBBBBYBBBBBK..
+.KBFFFFFFFFFBK..
+KBBFfFFfFFfFBBK.
+KBKFFFFFFFFFKBK.
+KBBKRRRRRRRKBBK.
+.KBKRrrrrrRKBK..
+..KYYKKKKKYYK..."""),
 }
 
 def rect(x, y, w, h, c, a=None):

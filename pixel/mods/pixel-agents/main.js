@@ -63,7 +63,7 @@ const PIXEL = "Departure Mono"; // ships in mods/pixel-spaces/fonts
 const hash = (s) => [...(s ?? "")].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7);
 // Art from sprites.py. One adventurer per space: its hash picks one, the next free one
 // if taken (by name order). One scene per machine: this one is DUSK.
-const AVATARS = ["knight", "wizard", "ranger", "dwarf", "cleric", "bard", "cat", "fox"];
+const AVATARS = ["knight", "wizard", "ranger", "dwarf", "cleric", "bard", "cat", "fox", "bunny", "owl"];
 const SCENES = ["dusk", "den", "grove", "keep", "cave"];
 // Picked scenes win over the hash: machine name -> scene.
 const SCENE_OF = { vps: "den" };
