@@ -409,6 +409,24 @@ wKFFFFFppFFFFFKw
 .KFFKYyYYyYKFFK.
 .KLLKYYYyYYKLLK.
 ..KKKKKKKKKKKK.."""),
+  # Otter in a striped sailor shirt, holding a pink seashell.
+  "otter": ({"O": "#8a5a3a", "o": "#c08a6a", "F": "#e8cfa8", "w": "#5a3a22", "W": "#f4f6fb", "B": "#3a4a7a", "P": "#f2a0b8", "s": "#d87090"}, """
+................
+................
+....KKKKKKKK....
+..KKOOOOOOOOKK..
+.KOOOOOOOOOOOOK.
+KoKOOOOOOOOOOKoK
+.KOOOOOOOOOOOOK.
+.KOOKOOOOOOKOOK.
+.KFFcFFFFFFcFFK.
+wKFFFFFKKFFFFFKw
+..KFwFFFFFFwFK..
+..KKBBBBBBBBKK..
+.KWWWKPPPPKWWWK.
+.KBBOKPsPsKOBBK.
+.KWWOOKPPKOOWWK.
+..KKKKKKKKKKKK.."""),
   # Christmas pack.
   "santa": ({"W": "#f4f6fb", "R": "#d8504a", "B": "#3b2433", "Y": "#f2c23a"}, """
 ..........WW....
@@ -509,6 +527,7 @@ EYES = {
   "raccoon": [[(3, 7)], [(11, 7)]], "penguin": [[(5, 6)], [(10, 6)]],
   "hedgehog": [[(5, 7)], [(11, 7)]], "axolotl": [[(4, 6)], [(10, 6)]],
   "capybara": [[(3, 7)], [(12, 7)]], "redpanda": [[(4, 7)], [(11, 7)]], "mouse": [[(4, 7)], [(11, 7)]],
+  "otter": [[(4, 7)], [(11, 7)]],
   "santa": [[(4, 7)], [(11, 7)]], "elf": [[(4, 9)], [(11, 9)]], "reindeer": [[(4, 6)], [(11, 6)]],
   "snowman": [[(5, 6)], [(10, 6)]], "gingerbread": [[(5, 4)], [(10, 4)]],
 }

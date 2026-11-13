@@ -54,7 +54,7 @@ Each character shows what its agent is doing:
 <td align="center"><img src="docs/chars/capybara.svg" width="96" alt="Capybara"><br><b>Capybara</b><br>Fresh from the hot spring: a yuzu on its head, a striped towel.</td>
 <td align="center"><img src="docs/chars/redpanda.svg" width="96" alt="Red panda"><br><b>Red panda</b><br>Moss-green sweater, warming its paws on a mug of tea.</td>
 <td align="center"><img src="docs/chars/mouse.svg" width="96" alt="Mouse"><br><b>Mouse</b><br>Lilac cardigan, hugging a block of cheese.</td>
-<td></td>
+<td align="center"><img src="docs/chars/otter.svg" width="96" alt="Otter"><br><b>Otter</b><br>Striped sailor shirt, holding a pink seashell.</td>
 </tr>
 </table>
 
