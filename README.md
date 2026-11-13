@@ -37,6 +37,12 @@ Characters come in packs, and you can switch packs with one command.
 <td align="center"><img src="docs/chars/hedgehog.svg" width="96" alt="Hedgehog"><br><b>Hedgehog</b><br>Spiky coat, holding a shiny red apple.</td>
 <td align="center"><img src="docs/chars/axolotl.svg" width="96" alt="Axolotl"><br><b>Axolotl</b><br>Frilly pink gills, hugging a bubble tea.</td>
 </tr>
+<tr>
+<td align="center"><img src="docs/chars/capybara.svg" width="96" alt="Capybara"><br><b>Capybara</b><br>Fresh from the hot spring: a yuzu on its head, a striped towel.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 
 ### Christmas pack

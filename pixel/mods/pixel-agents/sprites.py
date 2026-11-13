@@ -319,7 +319,6 @@ KNNKWWWWWWWWKNNK
 KNKWWWWWWWWWWKNK
 .KKWWWWWWWWWWKK.
 ...KOOK..KOOK..."""),
-  # Hedgehog with a spiky coat, holding a shiny red apple.
   # Pink axolotl with frilly gills, hugging a bubble tea.
   "axolotl": ({"P": "#f6a8c0", "c": "#e8708e", "G": "#e0607e", "T": "#f2e6d0", "D": "#5a3a22", "w": "#5fd3e0"}, """
 ................
@@ -338,6 +337,7 @@ GGKPKPPPPPKPKGG.
 KPPPPKTDTDKPPPK.
 .KPPPKDTDTKPPK..
 ..KKKKKKKKKKKK.."""),
+  # Hedgehog with a spiky coat, holding a shiny red apple.
   "hedgehog": ({"Q": "#8a5a3a", "q": "#b07a4a", "F": "#f2dcb8", "n": K, "R": "#d8504a", "r": "#f2a0a8", "G": "#7fc060"}, """
 ...K...K...K....
 ..KQK.KQK.KQK...
@@ -355,6 +355,24 @@ KQQQQQFFFFFQKGK.
 KQQqQQQQQQQKRrRK
 .KQQQQQQQQQKRRRK
 ..KKFFKKFFKKKKK."""),
+  # Capybara fresh from the hot spring: a yuzu on its head and a striped bath towel.
+  "capybara": ({"B": "#b0804e", "b": "#8a5a3a", "Y": "#f2b334", "y": "#ffe08a", "L": "#7fc060", "T": "#5fd3e0", "t": "#f4f6fb"}, """
+.......LL.......
+......KKKK......
+.....KYyYYK.....
+..KK.KYYYYK.KK..
+.KbbKKKKKKKKbbK.
+.KBBBBBBBBBBBBK.
+.KBBBBBBBBBBBBK.
+.KBKBBBBBBBBKBK.
+.KBcBBBBBBBBcBK.
+.KBBbbbbbbbbBBK.
+.KBbbKbbbbKbbBK.
+..KbbbbKKbbbbK..
+..KTTTTTTTTTTK..
+.KTTtTtTtTtTTBK.
+KBBTtBBBBBBBBBBK
+.KKTTKKKKKKKKKK."""),
   # Christmas pack.
   "santa": ({"W": "#f4f6fb", "R": "#d8504a", "B": "#3b2433", "Y": "#f2c23a"}, """
 ..........WW....
