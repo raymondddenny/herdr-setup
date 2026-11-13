@@ -40,7 +40,7 @@ Characters come in packs, and you can switch packs with one command.
 <tr>
 <td align="center"><img src="docs/chars/capybara.svg" width="96" alt="Capybara"><br><b>Capybara</b><br>Fresh from the hot spring: a yuzu on its head, a striped towel.</td>
 <td align="center"><img src="docs/chars/redpanda.svg" width="96" alt="Red panda"><br><b>Red panda</b><br>Moss-green sweater, warming its paws on a mug of tea.</td>
-<td></td>
+<td align="center"><img src="docs/chars/mouse.svg" width="96" alt="Mouse"><br><b>Mouse</b><br>Lilac cardigan, hugging a block of cheese.</td>
 <td></td>
 </tr>
 </table>

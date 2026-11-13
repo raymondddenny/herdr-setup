@@ -391,6 +391,24 @@ KRcWDWWWWWWDWcRK
 .KRRKnMMMMMMKRK.
 .KGGKnMMMMMKGGK.
 ..KKKKKKKKKKKK.."""),
+  # Mouse in a lilac cardigan, hugging a block of cheese.
+  "mouse": ({"F": "#b8b0c4", "P": "#f2a0b8", "w": "#8a8098", "L": "#a888d0", "l": "#c8b0e8", "Y": "#f2c23a", "y": "#c8901a", "h": "#ffe08a"}, """
+..KKK......KKK..
+.KFFFK....KFFFK.
+KFPPPFK..KFPPPFK
+KFPPPFKKKKFPPPFK
+KFPPFFFFFFFFPPFK
+.KFFFFFFFFFFFFK.
+.KFFFFFFFFFFFFK.
+KFFFKFFFFFFKFFFK
+KFFcFFFFFFFFcFFK
+wKFFFFFppFFFFFKw
+..KKFFFFFFFFKK..
+..KLlLlLlLlLlK..
+.KLLKhhhhhhKLLK.
+.KFFKYyYYyYKFFK.
+.KLLKYYYyYYKLLK.
+..KKKKKKKKKKKK.."""),
   # Christmas pack.
   "santa": ({"W": "#f4f6fb", "R": "#d8504a", "B": "#3b2433", "Y": "#f2c23a"}, """
 ..........WW....
