@@ -171,6 +171,42 @@ CHARS = {
 ..KvvvvKDDDKKSK.
 ...KKNNKKKKNNK..
 """),
+  # Grey tabby in a mustard scarf, napping with a ball of yarn.
+  "cat": ({"G": "#9aa3c0", "g": "#7a82a0", "e": "#f2a0a8", "n": "#f28a8a", "W": "#f2eef8", "R": "#e0a03a", "r": "#f2d27a", "Y": "#f28aa0"}, """
+................
+..KK.......KK...
+..KGK.....KGK...
+..KGeKKKKKeGK...
+..KGGGGgGGGGK...
+.KGGgGGGGGgGGK..
+.KGGGGGGGGGGGK..
+.KGKKGGGGGKKGK..
+.KGcGGGnGGGcGK..
+.KGGGGKGKGGGGK..
+..KGGGGGGGGGK...
+..KRRRRRRRRRK...
+.KGRRrRRRRRRGK..
+.KGGWWWWWWGGGKYK
+..KGWWWWWWGGKYYK
+..KKKKKKKKKKKKK."""),
+  # Fox in a green scarf, bushy white-tipped tail.
+  "fox": ({"O": "#e8833a", "d": "#8a4a2a", "W": "#fbeedd", "n": K, "G": "#4caf50", "g": "#3a8a3e"}, """
+................
+.KK.........KK..
+.KOK.......KOK..
+.KOdK.....KdOK..
+.KOOKKKKKKKOOK..
+.KOOOOOOOOOOOK..
+KOOOOOOOOOOOOOK.
+KOOKOOOOOOOKOOK.
+KWWcOOOOOOOcWWK.
+.KWWWWWnWWWWWK..
+..KWWWWWWWWWK...
+...KKGGGGGKK....
+..KOGGgGGGGOK...
+.KOOOWWWWOOOKOOK
+.KOOWWWWWWOOKOWK
+..KKKKKKKKKKKKK."""),
 }
 
 def rect(x, y, w, h, c, a=None):
