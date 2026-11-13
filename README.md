@@ -119,8 +119,10 @@ Press **⌘⌥S** (Command-Option-S) to open a booted iOS simulator or Android d
 
 ## Claude usage
 
-The **USAGE** block at the bottom of the sidebar shows how much of your Claude plan you've used: the 5-hour session and the week, each with a pixel bar and when it resets.
+The **USAGE** block at the bottom of the sidebar shows how much of your Claude plan you've used: the 5-hour session and the week, each with a pixel bar and the time left.
+Under each bar, `RESET 12:50 · NEXT 17:50` says when that window last reset and when it resets next (dates for the week).
 Bars turn orange at 70% and red at 90%.
+Once a reset time passes, the row shows 0% and a green `RESET` until Claude Code sends the new numbers.
 
 - The numbers come from Claude Code itself: it sends them to its status line command after each reply, and `bin/claude-usage-tap` saves them for Herdr.
   Nothing is fetched from the internet and no login token is read.

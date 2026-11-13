@@ -8,7 +8,6 @@ import { theme, appHome, readTextFile, layout, exec, notify } from "herdr";
 
 const PIXEL = "Departure Mono"; // ships in mods/pixel-spaces/fonts
 const CELLS = 14;
-const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const pad = (n) => String(n).padStart(2, "0");
 
 function find(node, id) {
@@ -21,13 +20,21 @@ function find(node, id) {
 }
 const narrow = () => (find(layout(), "sidebar")?.size?.px ?? Infinity) < 160;
 
-// "2H 05M" until a reset within a day, else its weekday and time ("FRI 14:00").
-function resets(sec, now) {
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const SPAN = { five_hour: 5 * 3600, seven_day: 7 * 86400 }; // each window's length
+
+// Time left: "42M", "3H 05M", "6D 02H".
+function left(sec, now) {
   const m = Math.max(1, Math.ceil((sec - now) / 60));
   if (m < 60) return `${m}M`;
-  if (m < 24 * 60) return `${Math.floor(m / 60)}H ${pad(m % 60)}M`;
+  const h = Math.floor(m / 60);
+  return h < 24 ? `${h}H ${pad(m % 60)}M` : `${Math.floor(h / 24)}D ${pad(h % 24)}H`;
+}
+
+// A reset moment: its time for the session ("16:00"), its date for the week ("NOV 13").
+function stamp(sec, long) {
   const d = new Date(sec * 1000);
-  return `${DAYS[d.getDay()]} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return long ? `${MONTHS[d.getMonth()]} ${d.getDate()}` : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 export default class ClaudeUsage extends View {
@@ -50,11 +57,18 @@ export default class ClaudeUsage extends View {
     });
   }
 
-  // A limit whose reset time has passed is back to 0 until Claude Code says otherwise.
-  metric(lim, now) {
+  // The window started (last reset) one span before its reset time. Once that time has
+  // passed the limit is back to 0, shown as RESET until Claude Code sends new numbers.
+  metric(key, now) {
+    const lim = this.limits?.[key];
     if (!lim) return null;
-    const live = lim.resets_at > now;
-    return { pct: live ? Math.round(lim.used_percentage) : 0, when: live ? resets(lim.resets_at, now) : "" };
+    const long = key === "seven_day";
+    if (lim.resets_at <= now) return { pct: 0, reset: true, when: "RESET", note: `RESET ${stamp(lim.resets_at, long)}` };
+    return {
+      pct: Math.round(lim.used_percentage),
+      when: left(lim.resets_at, now),
+      note: `RESET ${stamp(lim.resets_at - SPAN[key], long)} · NEXT ${stamp(lim.resets_at, long)}`,
+    };
   }
 
   color(pct, t) {
@@ -69,16 +83,17 @@ export default class ClaudeUsage extends View {
         .child(div().flex_none().text_color(t.muted).child(label))
         .child(div().flex_none().text_color(color).child(`${m.pct}%`))
         .child(div().flex_1())
-        .when(Boolean(m.when), (el) => el.child(div().flex_none().text_size(11).text_color(t.dim).child(m.when))))
+        .child(div().flex_none().text_size(11).text_color(m.reset ? t.done : t.dim).child(m.when)))
       .child(h_flex().gap(2).children(Array.from({ length: CELLS }, (_, i) =>
-        div().flex_1().h(7).bg(i < lit ? color : color + "26"))));
+        div().flex_1().h(7).bg(i < lit ? color : color + "26"))))
+      .child(div().text_size(10.5).text_color(t.dim).child(m.note));
   }
 
   render() {
     const t = theme();
     const now = Date.now() / 1000;
-    const session = this.metric(this.limits?.five_hour, now);
-    const week = this.metric(this.limits?.seven_day, now);
+    const session = this.metric("five_hour", now);
+    const week = this.metric("seven_day", now);
     const root = v_flex().size_full().min_h(0).bg(t.chrome).border_t(1).border_color(t.border).font_family(PIXEL).text_size(12);
 
     if (narrow()) {
