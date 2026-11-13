@@ -53,6 +53,7 @@ The focused pane's border and the cursor are orange.
 - Clicking a machine header in the agents list folds it (a chevron shows while folded).
 - The sort icon opens a popup: Priority (most urgent first) or Grouped by space; either way the groups stay per machine and pinned agents come first in each.
 - The spaces list keeps the shipped behavior: click to switch, drag to reorder within a machine, right-click for the space menu, `+` for a new space on that machine, click a machine header to fold it.
+- Character packs: Cozy (default, 13 characters on the normal scenes) and Christmas (santa, elf, reindeer, snowman, gingerbread on festive scenes: a garland of lights, snow on DUSK and GROVE). `herdr-app do pixel-agents.next-pack` cycles them and `pixel-agents.pack-<name>` picks one; a toast confirms, an unknown name shows a warning and changes nothing. The choice is shared state `pixel.pack`, so it survives restarts.
 - Each space keeps its adventurer across restarts: a hash of the space name picks one, and the next free one if taken, so up to twelve spaces never share.
 
 ## Built from
@@ -71,7 +72,7 @@ The focused pane's border and the cursor are orange.
 
 - Departure Mono loads at start or on the next look change: restart Herdr (or change the theme once) after copying, or the headers fall back to the default font.
 - 84px pictures are 3.5 logical pixels per art pixel: crisp on a 2x Retina screen (7 device pixels), slightly uneven at 1x. Use 72 or 96 on a 1x screen.
-- Thirteen or more spaces with agents repeat adventurers. Add sprites to `CHARS` in `sprites.py` and add their names to `AVATARS` in `main.js`.
+- A pack with fewer characters than spaces repeats them (Cozy has 13, Christmas 5). Add sprites to `CHARS` in `sprites.py` and their names to a pack in `PACKS` in `main.js`; Christmas characters also go in `XMAS` in `sprites.py` so the README shows them on festive scenes.
 - `SCENE_OF` in `pixel-agents/main.js` pins scenes by machine name (`{ vps: "den" }` here); a machine not listed gets a hashed scene.
 - The machine color table is duplicated in both mods (mods cannot import each other at run time); change both together.
 - Both mods are clones of Herdr 0.1.15's. A later Herdr may change the shipped mods; these stay as they are.

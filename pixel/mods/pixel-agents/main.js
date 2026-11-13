@@ -1,11 +1,11 @@
 // Cozy Pixel: modified from the `agents` mod shipped with Herdr 0.1.15 (Apache License 2.0).
-// Changed: agents grouped by machine with scene names, and pixel-art cards with an adventurer per space.
+// Changed: agents grouped by machine with scene names, pixel-art cards with a character per space, and switchable character packs.
 
 // Agents as pixel cards, grouped by machine; parents take their most urgent sub-agent's place.
 
 import { View, div, image, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { agents, terminals, panes, focused, spaces, run, theme, shared, setShared, setAgentOrder, openOverlay, closeOverlay, props, window, layout } from "herdr";
+import { agents, terminals, panes, focused, spaces, run, theme, shared, setShared, setAgentOrder, openOverlay, closeOverlay, props, window, layout, nextCommand, notify } from "herdr";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -64,23 +64,41 @@ const sortOf = () => SORTS.find((s) => s.id === shared("agents.sort")) ?? SORTS[
 
 const PIXEL = "Departure Mono"; // ships in mods/pixel-spaces/fonts
 const hash = (s) => [...(s ?? "")].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7);
-// Art from sprites.py. One adventurer per space: its hash picks one, the next free one
-// if taken (by name order). One scene per machine: this one is DUSK.
-const AVATARS = ["knight", "wizard", "ranger", "dwarf", "cleric", "bard", "cat", "fox", "bunny", "owl", "frog", "bear"];
+// Art from sprites.py. Character packs: one character per space from the shown pack
+// (its hash picks one, the next free one if taken, by name order). A festive pack
+// draws the scenes' `-xmas` versions. One scene per machine: this one is DUSK.
+// Switch: `herdr-app do pixel-agents.next-pack` or `pixel-agents.pack-<name>`.
+const PACKS = {
+  cozy: { label: "Cozy", chars: ["knight", "wizard", "ranger", "dwarf", "cleric", "bard", "cat", "fox", "bunny", "owl", "frog", "bear", "raccoon"] },
+  christmas: { label: "Christmas", chars: ["santa", "elf", "reindeer", "snowman", "gingerbread"], festive: true },
+};
+const packName = () => (PACKS[shared("pixel.pack")] ? shared("pixel.pack") : "cozy");
 const SCENES = ["dusk", "den", "grove", "keep", "cave"];
 // Picked scenes win over the hash: machine name -> scene.
 const SCENE_OF = { vps: "den" };
 const sceneOf = (m) => (m ? SCENE_OF[m] ?? SCENES[1 + (hash(m) % (SCENES.length - 1))] : SCENES[0]);
+const scenePath = (m) => `mods/pixel-agents/scenes/${sceneOf(m)}${PACKS[packName()].festive ? "-xmas" : ""}.svg`;
 function avatarsFor(names) {
+  const chars = PACKS[packName()].chars;
   const taken = new Map(), out = new Map();
   for (const n of [...new Set(names)].sort()) {
-    let i = hash(n) % AVATARS.length;
-    // ponytail: more spaces than sprites repeat; add CHARS to sprites.py if that bothers.
-    for (let k = 0; k < AVATARS.length && taken.has(i); k++) i = (i + 1) % AVATARS.length;
+    let i = hash(n) % chars.length;
+    // ponytail: more spaces than a pack has characters repeat; add CHARS to sprites.py if that bothers.
+    for (let k = 0; k < chars.length && taken.has(i); k++) i = (i + 1) % chars.length;
     taken.set(i, n);
-    out.set(n, `mods/pixel-agents/chars/${AVATARS[i]}.svg`);
+    out.set(n, `mods/pixel-agents/chars/${chars[i]}.svg`);
   }
   return out;
+}
+
+// `next-pack` cycles the packs; `pack-<name>` (or `pack:<name>`) picks one. Shared
+// state, so every copy and every restart sees it.
+function switchPack(command) {
+  const names = Object.keys(PACKS);
+  const want = command === "next-pack" ? names[(names.indexOf(packName()) + 1) % names.length] : command.replace(/^pack[-:]/, "");
+  if (!PACKS[want]) return notify({ title: "Unknown character pack", body: `Packs: ${names.join(", ")}`, level: "warning" });
+  setShared("pixel.pack", want);
+  notify({ title: `${PACKS[want].label} pack`, body: `${PACKS[want].chars.length} characters` });
 }
 // ponytail: same table in pixel-spaces; mods can't share code at run time.
 const MACHINE_COLORS = ["#f2b34a", "#5fd3e0", "#c792ea", "#7fe08a", "#ff7aa8"];
@@ -105,6 +123,13 @@ function icon(p, size, color) {
 export default class Agents extends View {
   init(_props, cx) {
     if (props()?.sortMenu) return;
+    cx.spawn(async (cx) => {
+      for (;;) {
+        const c = await nextCommand();
+        if (c === "next-pack" || /^pack[-:]/.test(c)) switchPack(c);
+        cx.notify();
+      }
+    });
     this.folded = new Set();
     // Each agent's last state and when it changed (ms), kept across restarts.
     this.changed = JSON.parse(localStorage.getItem("changed") ?? "{}");
@@ -386,7 +411,7 @@ export default class Agents extends View {
         })
         .on_click(() => run("pane.focus", { pane: a.pane }))
         .child(div().relative().size(86).flex_none().border(1).border_color(t.border)
-          .child(image(`mods/pixel-agents/scenes/${sceneOf(machineOf(a))}.svg`).absolute().size(84))
+          .child(image(scenePath(machineOf(a))).absolute().size(84))
           .child(image(avatars.get(a.space_name || a.space)).absolute().size(84))
           .child(corner))
         .child(v_flex().flex_1().min_w(0).gap(5)

@@ -283,7 +283,123 @@ KBBBBMMKMMBBBBK.
 .KBBKHHHHHKBBK..
 ..KBKHhHHHKBK...
 ..KKKKKKKKKKK..."""),
+  # Raccoon in a teal hoodie, sneaking a chocolate-chip cookie.
+  "raccoon": ({"G": "#9a9aa8", "W": "#f2eef8", "D": "#4a4a58", "n": K, "T": "#5fb3a8", "C": "#c8864a", "h": "#5a3a22"}, """
+................
+..KK.......KK...
+..KGK.....KGK...
+..KGGKKKKKGGK...
+.KGGGGGGGGGGGK..
+.KWWGGGGGGGWWK..
+KWDDDDWWWDDDDWK.
+KWDWDDWWWDDWDWK.
+KWWDDWWnWWDDWWK.
+.KWcWWWWWWWcWK..
+..KWWWWWWWWWK...
+..KTTTTTTTTTKKK.
+.KGTTTTTTTTKCCK.
+.KGTTTTTTTKChCK.
+..KTTTTTTTTKCCK.
+..KKKKKKKKKKKK.."""),
+  # Christmas pack.
+  "santa": ({"W": "#f4f6fb", "R": "#d8504a", "B": "#3b2433", "Y": "#f2c23a"}, """
+..........WW....
+........KKWWK...
+......KKRRKK....
+....KKRRRRRK....
+...KRRRRRRRRK...
+..KWWWWWWWWWWK..
+..KSSSSSSSSSSK..
+..KSKSSSSSSKSK..
+..KcSSSppSSScK..
+..KWWWWWWWWWWK..
+.KWWWWWWWWWWWWK.
+.KRKWWWWWWWWKRK.
+.KSRKWWWWWWKRSK.
+..KRRRRRRRRRRK..
+..KBBBBYYBBBBK..
+..KKKK....KKKK.."""),
+  "elf": ({"G": "#4caf50", "R": "#d8504a", "Y": "#f2c23a"}, """
+................
+..........KK....
+.........KYYK...
+........KGGK....
+......KKGGGK....
+....KKGGGGGGK...
+...KGGGGGGGGGK..
+..KRRRRRRRRRRK..
+KSKSSSSSSSSSSKSK
+.KSSKSSSSSSKSSK.
+..KcSSSppSSScK..
+...KKKSSSSKKK...
+..KGGGRRRRGGGK..
+.KSKGGGYYGGGKSK.
+..KGGGGGGGGGGK..
+..KRRKK..KKRRK.."""),
+  "reindeer": ({"A": "#c8a070", "B": "#9a6a44", "M": "#e8c8a0", "R": "#ff5e6c", "G": "#4caf50", "g": "#f4f6fb"}, """
+.KK.KK....KK.KK.
+.KAKAK....KAKAK.
+..KAAK....KAAK..
+...KAKKKKKKAK...
+..KBBBBBBBBBBK..
+.KBBBBBBBBBBBBK.
+.KBBKBBBBBBKBBK.
+.KBcBBMMMMBBcBK.
+.KBBBMMRRMMBBBK.
+..KBBMMRRMMBBK..
+...KBBMMMMBBK...
+..KGGGGGGGGGGK..
+.KBGgGGGGGGgGBK.
+.KBBBBBBBBBBBBK.
+..KBBKKKKKKBBK..
+..KKK......KKK.."""),
+  "snowman": ({"W": "#f4f6fb", "w": "#c8d2e8", "R": "#d8504a", "r": "#f2a0a8", "O": "#f08a3a", "G": "#4caf50", "g": "#2e6a3a"}, """
+.......WW.......
+.....KKWWKK.....
+....KRRRRRRK....
+...KRRrRRrRRK...
+...KrrrrrrrrK...
+..KWWWWWWWWWWK..
+..KWWKWWWWKWWK..
+..KWcWWOOWWcWK..
+..KWWWWWOOWWWK..
+...KWWKKKKWWK...
+..KGGGGGGGGGGK..
+.KWWGgGWWWWWWWK.
+KWWWWGGWKWWWWWWK
+KwWWWWWWWWWWWWwK
+KwWWWWWWKWWWWWwK
+.KKKKKKKKKKKKKK."""),
+  "gingerbread": ({"D": "#c8864a", "W": "#f8f4ee", "R": "#d8504a", "G": "#4caf50"}, """
+................
+.....KKKKKK.....
+....KDDDDDDK....
+...KDDDDDDDDK...
+...KDKDDDDKDK...
+...KDcDDDDcDK...
+...KDDWWWWDDK...
+....KDDDDDDK....
+..KKKDDDDDDKKK..
+.KDWDDDDRDDDWDK.
+.KDDKDDDDDDKDDK.
+..KK.KDDGDDK.KK.
+.....KDDDDDK....
+....KDDDRDDDK...
+...KDWDKKKDWDK..
+...KKKK...KKKK.."""),
 }
+# Which characters belong to the festive pack (mirrors PACKS in main.js), so the README
+# images show them on the `-xmas` scenes.
+XMAS = ["santa", "elf", "reindeer", "snowman", "gingerbread"]
+OUTDOOR = {"dusk", "grove"}
+
+def festive(name):  # a scene's Christmas version: a garland of lights; snow outdoors
+    rects = list(SCENES[name])
+    rects += [(0, 0, 24, 1, "#2e6a3a")] + [(x, 1, 1, 1, ["#ff5e6c", "#f2c23a", "#8ab4f0"][x // 3 % 3]) for x in range(1, 24, 3)]
+    if name in OUTDOOR:
+        rects += [(x, y, 1, 1, "#f4f6fb") for x, y in [(2, 4), (7, 3), (20, 5), (15, 3), (1, 11), (22, 10), (11, 5)]]
+        rects += [(0, 20, 24, 1, "#eef2fa"), (3, 21, 2, 1, "#eef2fa"), (12, 21, 3, 1, "#eef2fa"), (19, 21, 2, 1, "#eef2fa")]
+    return rects
 
 def rect(x, y, w, h, c, a=None):
     op = f' fill-opacity="{a}"' if a is not None else ""
@@ -292,8 +408,9 @@ def rect(x, y, w, h, c, a=None):
 def svg(body):
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="96" height="96" shape-rendering="crispEdges">{body}</svg>\n'
 
-def scene_body(name):
-    return "".join(rect(*r) for r in SCENES[name])
+def scene_body(name):  # "den", or "den-xmas" for its festive version
+    rects = festive(name[:-5]) if name.endswith("-xmas") else SCENES[name]
+    return "".join(rect(*r) for r in rects)
 
 def char_body(name, ox=4, oy=4):
     pal, art = CHARS[name]
@@ -313,19 +430,26 @@ def soon_body():
     mark = "".join(rect(7 + 2 * x, 4 + 2 * y, 2, 2, "#f2e6d0") for y, row in enumerate(SOON) for x, c in enumerate(row) if c == "#")
     return scene_body("dusk") + rect(0, 0, 24, 24, "#10131b", 0.6) + mark
 
+def sheet(path, chars, scenes):
+    cells = [f'<g transform="translate({i * 25},{j * 25})">{scene_body(s)}{char_body(c)}</g>'
+             for j, s in enumerate(scenes) for i, c in enumerate(chars)]
+    w, h = len(chars) * 25, len(scenes) * 25
+    open(path, "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w * 5}" height="{h * 5}" shape-rendering="crispEdges">{"".join(cells)}</svg>\n')
+
 def docs(out):
     os.makedirs(f"{out}/chars", exist_ok=True)
-    scenes = list(SCENES)
-    for i, c in enumerate(CHARS):  # each char on the next scene in turn
-        open(f"{out}/chars/{c}.svg", "w").write(svg(scene_body(scenes[i % len(scenes)]) + char_body(c)))
+    cozy = [c for c in CHARS if c not in XMAS]
+    plain, xmas = list(SCENES), [f"{s}-xmas" for s in SCENES]
+    for i, c in enumerate(cozy):  # each char on the next scene in turn
+        open(f"{out}/chars/{c}.svg", "w").write(svg(scene_body(plain[i % len(plain)]) + char_body(c)))
+    for i, c in enumerate(XMAS):
+        open(f"{out}/chars/{c}.svg", "w").write(svg(scene_body(xmas[i % len(xmas)]) + char_body(c)))
     open(f"{out}/chars/soon.svg", "w").write(svg(soon_body()))
-    cells = [f'<g transform="translate({i * 25},{j * 25})">{scene_body(s)}{char_body(c)}</g>'
-             for j, s in enumerate(SCENES) for i, c in enumerate(CHARS)]
-    w, h = len(CHARS) * 25, len(SCENES) * 25
-    open(f"{out}/sprites.svg", "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w * 5}" height="{h * 5}" shape-rendering="crispEdges">{"".join(cells)}</svg>\n')
+    sheet(f"{out}/sprites.svg", cozy, plain)
+    sheet(f"{out}/sprites-christmas.svg", XMAS, xmas)
 
 if __name__ == "__main__":
-    for s in SCENES: write("scenes", s, scene_body(s))
+    for s in SCENES: write("scenes", s, scene_body(s)); write("scenes", f"{s}-xmas", scene_body(f"{s}-xmas"))
     for c in CHARS: write("chars", c, char_body(c))
     if len(sys.argv) > 1: docs(sys.argv[1])
     print(sorted(SCENES), sorted(CHARS))

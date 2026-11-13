@@ -8,6 +8,9 @@ The main piece is **Cozy Pixel**, a layout with a pixel-art sidebar: spaces and 
 ## Characters
 
 Each space gets its own character, standing in its machine's scene: `DUSK` for this computer, then `DEN`, `GROVE`, `KEEP` or `CAVE` for the others.
+Characters come in packs, and you can switch packs with one command.
+
+### Cozy pack (default)
 
 <table>
 <tr>
@@ -28,13 +31,47 @@ Each space gets its own character, standing in its machine's scene: `DUSK` for t
 <td align="center"><img src="docs/chars/frog.svg" width="96" alt="Frog"><br><b>Frog</b><br>Yellow raincoat and a big grin.</td>
 <td align="center"><img src="docs/chars/bear.svg" width="96" alt="Bear"><br><b>Bear</b><br>Red scarf, holding a honey pot.</td>
 </tr>
+<tr>
+<td align="center"><img src="docs/chars/raccoon.svg" width="96" alt="Raccoon"><br><b>Raccoon</b><br>Teal hoodie, sneaking a cookie.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
+
+### Christmas pack
+
+The scenes go festive too: a garland of lights everywhere, and snow on the porch and in the garden.
+
+<table>
+<tr>
+<td align="center" width="25%"><img src="docs/chars/santa.svg" width="96" alt="Santa"><br><b>Santa</b><br>Pompom hat, fluffy beard, gold buckle.</td>
+<td align="center" width="25%"><img src="docs/chars/elf.svg" width="96" alt="Elf"><br><b>Elf</b><br>Pointy ears and a hat with a bell.</td>
+<td align="center" width="25%"><img src="docs/chars/reindeer.svg" width="96" alt="Reindeer"><br><b>Reindeer</b><br>Antlers, a glowing red nose, a green scarf.</td>
+<td align="center" width="25%"><img src="docs/chars/snowman.svg" width="96" alt="Snowman"><br><b>Snowman</b><br>Red beanie, carrot nose, coal buttons.</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/chars/gingerbread.svg" width="96" alt="Gingerbread"><br><b>Gingerbread</b><br>Icing smile and candy buttons.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+### Switch packs
+
+```sh
+herdr-app do pixel-agents.next-pack        # cycle: Cozy -> Christmas -> Cozy
+herdr-app do pixel-agents.pack-christmas   # pick one by name
+herdr-app do pixel-agents.pack-cozy
+```
+
+A toast confirms the switch, and the choice survives restarts.
 
 ### Coming soon
 
 <table>
 <tr>
-<td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Raccoon</b><br>Coming soon</td>
 <td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Penguin</b><br>Coming soon</td>
 <td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Hedgehog</b><br>Coming soon</td>
 <td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Axolotl</b><br>Coming soon</td>
@@ -44,7 +81,9 @@ Each space gets its own character, standing in its machine's scene: `DUSK` for t
 <details>
 <summary><b>Every character on every scene</b></summary>
 
-![Every character on every scene](docs/sprites.svg)
+![Every Cozy character on every scene](docs/sprites.svg)
+
+![Every Christmas character on every festive scene](docs/sprites-christmas.svg)
 
 </details>
 
@@ -73,7 +112,7 @@ Edit the installed copy in `~/.config/herdr-app/mods/pixel-agents/`, not the one
 
 1. Edit a grid in `sprites.py`, or add a new entry to `CHARS` there.
 2. Run `python3 sprites.py` in that folder. Herdr picks up the new SVGs right away.
-3. For a new character, also add its name to `AVATARS` in `main.js`.
+3. For a new character, also add its name to a pack's `chars` in `PACKS` in `main.js`. A new pack is a new entry in `PACKS`; `festive: true` makes it use the `-xmas` scenes.
 
 To pin a machine to a scene, add it to `SCENE_OF` in `main.js`, e.g. `{ vps: "den" }`.
 
@@ -89,7 +128,7 @@ Fork this repo, copy your edited files into your fork's `pixel/mods/pixel-agents
 |---|---|
 | `pixel/` | The Cozy Pixel layout, in the herdr.dev layout format (`RECIPE.md`, `preview.png`, `layouts/`, `themes/`, `mods/`). |
 | `home/` | My `settings.json` and `keys.json`. |
-| `docs/sprites.svg` | Every character on every scene. |
+| `docs/` | The README images: one card per character and the full sprite sheets. |
 | `sync.sh` | Copies the live setup from `~/.config/herdr-app` into this repo. |
 
 </details>
