@@ -319,6 +319,24 @@ KNNKWWWWWWWWKNNK
 KNKWWWWWWWWWWKNK
 .KKWWWWWWWWWWKK.
 ...KOOK..KOOK..."""),
+  # Hedgehog with a spiky coat, holding a shiny red apple.
+  "hedgehog": ({"Q": "#8a5a3a", "q": "#b07a4a", "F": "#f2dcb8", "n": K, "R": "#d8504a", "r": "#f2a0a8", "G": "#7fc060"}, """
+...K...K...K....
+..KQK.KQK.KQK...
+.KQQQKQQQKQQQK..
+KQQqQQQqQQQqQQK.
+.KQQQQQQQQQQQQK.
+KQQqQQFFFFFQqQQK
+.KQQQFFFFFFFQQK.
+KQQQFKFFFFFKFQQK
+.KQQFcFFnFFcFQK.
+KQQQFFFFFFFFFQQK
+.KQQQFFFFFFFQQK.
+KQQQQQFFFFFQKGK.
+.KQQQQQQQQQKRRRK
+KQQqQQQQQQQKRrRK
+.KQQQQQQQQQKRRRK
+..KKFFKKFFKKKKK."""),
   # Christmas pack.
   "santa": ({"W": "#f4f6fb", "R": "#d8504a", "B": "#3b2433", "Y": "#f2c23a"}, """
 ..........WW....

@@ -34,7 +34,7 @@ Characters come in packs, and you can switch packs with one command.
 <tr>
 <td align="center"><img src="docs/chars/raccoon.svg" width="96" alt="Raccoon"><br><b>Raccoon</b><br>Teal hoodie, sneaking a cookie.</td>
 <td align="center"><img src="docs/chars/penguin.svg" width="96" alt="Penguin"><br><b>Penguin</b><br>Pink earmuffs and a red striped scarf.</td>
-<td></td>
+<td align="center"><img src="docs/chars/hedgehog.svg" width="96" alt="Hedgehog"><br><b>Hedgehog</b><br>Spiky coat, holding a shiny red apple.</td>
 <td></td>
 </tr>
 </table>
@@ -74,7 +74,6 @@ A toast confirms the switch, and the choice survives restarts.
 
 <table>
 <tr>
-<td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Hedgehog</b><br>Coming soon</td>
 <td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Axolotl</b><br>Coming soon</td>
 </tr>
 </table>
