@@ -53,7 +53,7 @@ The focused pane's border and the cursor are orange.
 - Clicking a machine header in the agents list folds it (a chevron shows while folded).
 - The sort icon opens a popup: Priority (most urgent first) or Grouped by space; either way the groups stay per machine and pinned agents come first in each.
 - The spaces list keeps the shipped behavior: click to switch, drag to reorder within a machine, right-click for the space menu, `+` for a new space on that machine, click a machine header to fold it.
-- Character packs: Cozy (default, 14 characters on the normal scenes) and Christmas (santa, elf, reindeer, snowman, gingerbread on festive scenes: a garland of lights, snow on DUSK and GROVE). `cmd-alt-p` (bound in `keys.json` under `layout:pixel`, so only while this layout shows) and `herdr-app do pixel-agents.next-pack` cycle them and `pixel-agents.pack-<name>` picks one; a toast confirms, an unknown name shows a warning and changes nothing. The choice is shared state `pixel.pack`, so it survives restarts.
+- Character packs: Cozy (default, 14 characters on the normal scenes) and Christmas (santa, elf, reindeer, snowman, gingerbread on festive scenes: a garland of lights, snow on DUSK and GROVE). ⌘⌥P on a Mac (`cmd-alt-p`, bound in `keys.json` under `layout:pixel`, so only while this layout shows) and `herdr-app do pixel-agents.next-pack` cycle them and `pixel-agents.pack-<name>` picks one; a toast confirms, an unknown name shows a warning and changes nothing. The choice is shared state `pixel.pack`, so it survives restarts.
 - Each space keeps its adventurer across restarts: a hash of the space name picks one, and the next free one if taken, so up to twelve spaces never share.
 
 ## Built from

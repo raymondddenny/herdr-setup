@@ -98,7 +98,8 @@ function switchPack(command) {
   const want = command === "next-pack" ? names[(names.indexOf(packName()) + 1) % names.length] : command.replace(/^pack[-:]/, "");
   if (!PACKS[want]) return notify({ title: "Unknown character pack", body: `Packs: ${names.join(", ")}`, level: "warning" });
   setShared("pixel.pack", want);
-  notify({ title: `${PACKS[want].label} pack`, body: `${PACKS[want].chars.length} characters` });
+  const hint = window()?.platform === "macos" ? " \u00b7 \u2318\u2325P for the next pack" : "";
+  notify({ title: `${PACKS[want].label} pack`, body: `${PACKS[want].chars.length} characters${hint}` });
 }
 // ponytail: same table in pixel-spaces; mods can't share code at run time.
 const MACHINE_COLORS = ["#f2b34a", "#5fd3e0", "#c792ea", "#7fe08a", "#ff7aa8"];

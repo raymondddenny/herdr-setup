@@ -60,7 +60,7 @@ The scenes go festive too: a garland of lights everywhere, and snow on the porch
 
 ### Switch packs
 
-Press `cmd-alt-p` while the Cozy Pixel layout is shown to cycle packs, or use a terminal:
+On a Mac, press **⌘⌥P** (Command-Option-P) while the Cozy Pixel layout is shown to cycle packs, or use a terminal:
 
 ```sh
 herdr-app do pixel-agents.next-pack        # cycle: Cozy -> Christmas -> Cozy
@@ -99,7 +99,7 @@ herdr-app check ~/.config/herdr-app/mods/pixel-agents
 herdr-app do layout.switch '{"name":"pixel"}'
 ```
 
-For the `cmd-alt-p` pack shortcut, add the `layout:pixel` section from `pixel/keys.json` to your `~/.config/herdr-app/keys.json` (merge it; don't replace the file).
+For the **⌘⌥P** pack shortcut, add the `layout:pixel` section from `pixel/keys.json` to your `~/.config/herdr-app/keys.json` (merge it; don't replace the file).
 
 Restart Herdr once so the pixel font loads.
 `ctrl-shift-l` switches back to your previous layout.
