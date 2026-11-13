@@ -97,17 +97,28 @@ Then `hview report.pdf` or `hview photo.png` opens it the same way.
 - macOS only, and only files on this computer (not on a connected remote machine).
 - PDFs are rendered with macOS PDFKit. The first PDF compiles a small renderer once, which takes a few seconds; this needs the Xcode Command Line Tools (`xcode-select --install`).
 
+## Simulator pane
+
+Press **⌘⌥S** (Command-Option-S) to open a booted iOS simulator or Android device live in a pane beside your terminal, or run `herdr-sim` in any pane.
+
+- Click to tap, drag to swipe.
+- Keys: `n` next device, `h` home, `b` back (Android), `t` type text, `d` dark/light, `s` screenshot to Desktop, `o` open Simulator.app, `B` boot an iPhone, `q` quit.
+- Frames refresh about twice a second, and only when the screen changed.
+- iOS shows live with just Xcode. Taps, typing and Home on iOS need [AXe](https://github.com/cameroncooke/AXe) (`brew install cameroncooke/axe/axe`), because Apple's `simctl` cannot tap. Android works fully with `adb`.
+- It draws with the Kitty graphics protocol, which Herdr terminals support, so each frame replaces the last and memory stays flat.
+
 ## Install
 
 Copy the layout into your Herdr app home, then switch to it:
 
 ```sh
-cp -R pixel/layouts pixel/themes pixel/mods ~/.config/herdr-app/
+cp -R pixel/layouts pixel/themes pixel/mods pixel/bin ~/.config/herdr-app/
+ln -sf ~/.config/herdr-app/bin/herdr-sim ~/.local/bin/herdr-sim
 for m in pixel-spaces pixel-agents pixel-files file-preview; do herdr-app check ~/.config/herdr-app/mods/$m; done
 herdr-app do layout.switch '{"name":"pixel"}'
 ```
 
-For the **⌘⌥P** pack shortcut, add the `layout:pixel` section from `pixel/keys.json` to your `~/.config/herdr-app/keys.json` (merge it; don't replace the file).
+For the **⌘⌥P** pack and **⌘⌥S** simulator shortcuts, add the `layout:pixel` section from `pixel/keys.json` to your `~/.config/herdr-app/keys.json` (merge it; don't replace the file).
 
 Restart Herdr once so the pixel font loads.
 `ctrl-shift-l` switches back to your previous layout.
@@ -137,7 +148,7 @@ Fork this repo, copy your edited files into your fork's `pixel/mods/pixel-agents
 
 | Path | What it is |
 |---|---|
-| `pixel/` | The Cozy Pixel layout, in the herdr.dev layout format (`RECIPE.md`, `preview.png`, `layouts/`, `themes/`, `mods/`, `keys.json`). |
+| `pixel/` | The Cozy Pixel layout, in the herdr.dev layout format (`RECIPE.md`, `preview.png`, `layouts/`, `themes/`, `mods/`, `bin/herdr-sim`, `keys.json`). |
 | `home/` | My `settings.json` and `keys.json`. |
 | `docs/` | The README images: one card per character and the full sprite sheets. |
 | `sync.sh` | Copies the live setup from `~/.config/herdr-app` into this repo. |

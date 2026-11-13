@@ -1,5 +1,16 @@
 {
   "layout:pixel": {
-    "cmd-alt-p": "pixel-agents.next-pack"
+    "cmd-alt-p": "pixel-agents.next-pack",
+    "cmd-alt-s": {
+      "command": "pane.split",
+      "args": {
+        "direction": "right",
+        "argv": [
+          "sh",
+          "-c",
+          "exec python3 \"$HOME/.config/herdr-app/bin/herdr-sim\""
+        ]
+      }
+    }
   }
 }
