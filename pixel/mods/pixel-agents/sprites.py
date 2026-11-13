@@ -373,6 +373,24 @@ KQQqQQQQQQQKRrRK
 .KTTtTtTtTtTTBK.
 KBBTtBBBBBBBBBBK
 .KKTTKKKKKKKKKK."""),
+  # Red panda in a moss-green sweater, warming its paws on a mug of tea.
+  "redpanda": ({"R": "#d8642a", "W": "#f4f0e6", "D": "#5a2e1e", "G": "#6aa86a", "g": "#8ac88a", "M": "#6a9ad8", "n": "#9ac0f0", "m": "#8a5a3a"}, """
+................
+.KK..........KK.
+KWDK.KKKKKK.KDWK
+KWDDKRRRRRRKDDWK
+.KKRRRRRRRRRRKK.
+.KRRWWRRRRWWRRK.
+KRRRRRRRRRRRRRRK
+KRRRKRRRRRRKRRRK
+KRcWDWWWWWWDWcRK
+.KWWWWWKKWWWWWK.
+..KKKWWWWWWKKK..
+..KGgGgGgGgGgK..
+.KGGKMmmmmMKGGK.
+.KRRKnMMMMMMKRK.
+.KGGKnMMMMMKGGK.
+..KKKKKKKKKKKK.."""),
   # Christmas pack.
   "santa": ({"W": "#f4f6fb", "R": "#d8504a", "B": "#3b2433", "Y": "#f2c23a"}, """
 ..........WW....

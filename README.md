@@ -39,7 +39,7 @@ Characters come in packs, and you can switch packs with one command.
 </tr>
 <tr>
 <td align="center"><img src="docs/chars/capybara.svg" width="96" alt="Capybara"><br><b>Capybara</b><br>Fresh from the hot spring: a yuzu on its head, a striped towel.</td>
-<td></td>
+<td align="center"><img src="docs/chars/redpanda.svg" width="96" alt="Red panda"><br><b>Red panda</b><br>Moss-green sweater, warming its paws on a mug of tea.</td>
 <td></td>
 <td></td>
 </tr>

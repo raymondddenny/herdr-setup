@@ -69,7 +69,7 @@ const hash = (s) => [...(s ?? "")].reduce((h, c) => (h * 31 + c.codePointAt(0)) 
 // draws the scenes' `-xmas` versions. One scene per machine: this one is DUSK.
 // Switch: `herdr-app do pixel-agents.next-pack` or `pixel-agents.pack-<name>`.
 const PACKS = {
-  cozy: { label: "Cozy", chars: ["knight", "wizard", "ranger", "dwarf", "cleric", "bard", "cat", "fox", "bunny", "owl", "frog", "bear", "raccoon", "penguin", "hedgehog", "axolotl", "capybara"] },
+  cozy: { label: "Cozy", chars: ["knight", "wizard", "ranger", "dwarf", "cleric", "bard", "cat", "fox", "bunny", "owl", "frog", "bear", "raccoon", "penguin", "hedgehog", "axolotl", "capybara", "redpanda"] },
   christmas: { label: "Christmas", chars: ["santa", "elf", "reindeer", "snowman", "gingerbread"], festive: true },
 };
 const packName = () => (PACKS[shared("pixel.pack")] ? shared("pixel.pack") : "cozy");
