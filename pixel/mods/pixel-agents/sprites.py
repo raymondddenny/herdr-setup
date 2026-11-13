@@ -1,7 +1,11 @@
 # Cozy pixel art for pixel-agents: 24x24 scenes (one per machine) and 16x16 chibi
 # adventurers (one per space), drawn over each other in the card.
-# Run: python3 sprites.py [sheet.svg] -> writes scenes/*.svg and chars/*.svg next to
-# this file (and, given a path, a contact sheet of every char on every scene).
+# Run: python3 sprites.py [docs_dir] -> writes scenes/*.svg and chars/*.svg next to
+# this file; given a folder, also README images there: sprites.svg (every char on
+# every scene), chars/<name>.svg (each char on a scene) and chars/soon.svg.
+#
+# The drawings (SCENES, CHARS and their palettes) are art: CC BY-NC 4.0.
+# The code around them is Apache License 2.0. See NOTICE in the repo.
 import os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -302,12 +306,26 @@ def write(kind, name, body):
     os.makedirs(f"{HERE}/{kind}", exist_ok=True)
     open(f"{HERE}/{kind}/{name}.svg", "w").write(svg(body))
 
+# A pixel question mark (5x8, drawn at 2x) for characters not drawn yet.
+SOON = [".###.", "#...#", "....#", "...#.", "..#..", "..#..", ".....", "..#.."]
+
+def soon_body():
+    mark = "".join(rect(7 + 2 * x, 4 + 2 * y, 2, 2, "#f2e6d0") for y, row in enumerate(SOON) for x, c in enumerate(row) if c == "#")
+    return scene_body("dusk") + rect(0, 0, 24, 24, "#10131b", 0.6) + mark
+
+def docs(out):
+    os.makedirs(f"{out}/chars", exist_ok=True)
+    scenes = list(SCENES)
+    for i, c in enumerate(CHARS):  # each char on the next scene in turn
+        open(f"{out}/chars/{c}.svg", "w").write(svg(scene_body(scenes[i % len(scenes)]) + char_body(c)))
+    open(f"{out}/chars/soon.svg", "w").write(svg(soon_body()))
+    cells = [f'<g transform="translate({i * 25},{j * 25})">{scene_body(s)}{char_body(c)}</g>'
+             for j, s in enumerate(SCENES) for i, c in enumerate(CHARS)]
+    w, h = len(CHARS) * 25, len(SCENES) * 25
+    open(f"{out}/sprites.svg", "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w * 5}" height="{h * 5}" shape-rendering="crispEdges">{"".join(cells)}</svg>\n')
+
 if __name__ == "__main__":
     for s in SCENES: write("scenes", s, scene_body(s))
     for c in CHARS: write("chars", c, char_body(c))
-    if len(sys.argv) > 1:
-        cells = [f'<g transform="translate({i * 25},{j * 25})">{scene_body(s)}{char_body(c)}</g>'
-                 for j, s in enumerate(SCENES) for i, c in enumerate(CHARS)]
-        w, h = len(CHARS) * 25, len(SCENES) * 25
-        open(sys.argv[1], "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w * 5}" height="{h * 5}" shape-rendering="crispEdges">{"".join(cells)}</svg>\n')
+    if len(sys.argv) > 1: docs(sys.argv[1])
     print(sorted(SCENES), sorted(CHARS))

@@ -13,5 +13,5 @@ for m in pixel-spaces pixel-agents; do
   rsync -a --delete --exclude gpui-kit.d.ts --exclude jsconfig.json --exclude __pycache__ "$H/mods/$m/" "$P/mods/$m/"
 done
 cp "$H/settings.json" "$H/keys.json" "$R/home/"
-(cd "$P/mods/pixel-agents" && python3 sprites.py "$R/docs/sprites.svg" >/dev/null && rm -rf __pycache__)
+(cd "$P/mods/pixel-agents" && python3 sprites.py "$R/docs" >/dev/null && rm -rf __pycache__)
 echo "synced from $H"

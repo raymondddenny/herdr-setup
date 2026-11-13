@@ -1,11 +1,17 @@
 herdr-setup (Cozy Pixel)
 Copyright 2026 Denny Raymond
 
-Licensed under the Apache License, Version 2.0 (see LICENSE).
-This covers the code, the layout, the theme and the original pixel art.
+Two licenses apply:
+
+1. Code: the Apache License, Version 2.0 (see LICENSE).
+   This covers the mods' JavaScript, the code in sprites.py, the layout, the theme, sync.sh and the text of README.md and RECIPE.md.
+
+2. Pixel art: Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0, see LICENSE-ART).
+   This covers the drawings: the SCENES and CHARS data in pixel/mods/pixel-agents/sprites.py, the SVGs in pixel/mods/pixel-agents/scenes/ and chars/, everything in docs/, and pixel/preview.png.
+   Credit "Cozy Pixel art by Denny Raymond" with a link to https://github.com/raymondddenny/herdr-setup, and do not use it commercially without permission.
 
 This product includes software from Herdr (https://github.com/herdrdev/herdr-app), licensed under the Apache License, Version 2.0.
 pixel/mods/pixel-spaces/main.js and pixel/mods/pixel-agents/main.js are modified versions of Herdr's shipped `spaces` and `agents` mods; each file says what changed at its top.
 
 This product includes the Departure Mono font, Copyright 2022-2024 Helena Zhang, licensed under the SIL Open Font License, Version 1.1 (see pixel/mods/pixel-spaces/fonts/LICENSE-DepartureMono.txt).
-The font is not covered by the Apache License.
+The font is covered by neither license above.

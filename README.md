@@ -5,7 +5,48 @@ The main piece is **Cozy Pixel**, a layout with a pixel-art sidebar: spaces and 
 
 <img src="pixel/preview.png" alt="Cozy Pixel sidebar" width="300">
 
-![All characters on every scene](docs/sprites.svg)
+## Characters
+
+Each space gets its own character, standing in its machine's scene: `DUSK` for this computer, then `DEN`, `GROVE`, `KEEP` or `CAVE` for the others.
+
+<table>
+<tr>
+<td align="center" width="25%"><img src="docs/chars/knight.svg" width="96" alt="Knight"><br><b>Knight</b><br>Off duty: messy hair, striped scarf, a mug of cocoa.</td>
+<td align="center" width="25%"><img src="docs/chars/wizard.svg" width="96" alt="Wizard"><br><b>Wizard</b><br>Sleepy, in a floppy knit hat and a mustard sweater.</td>
+<td align="center" width="25%"><img src="docs/chars/ranger.svg" width="96" alt="Ranger"><br><b>Ranger</b><br>A leaf-sprout beanie and a warm poncho.</td>
+<td align="center" width="25%"><img src="docs/chars/dwarf.svg" width="96" alt="Dwarf"><br><b>Dwarf</b><br>Pompom beanie, big ginger beard, a mug.</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/chars/cleric.svg" width="96" alt="Cleric"><br><b>Cleric</b><br>Wrapped in a patchwork quilt, holding a candle.</td>
+<td align="center"><img src="docs/chars/bard.svg" width="96" alt="Bard"><br><b>Bard</b><br>Beret, striped sweater, a ukulele.</td>
+<td align="center"><img src="docs/chars/cat.svg" width="96" alt="Cat"><br><b>Cat</b><br>Grey tabby in a mustard scarf, with a ball of yarn.</td>
+<td align="center"><img src="docs/chars/fox.svg" width="96" alt="Fox"><br><b>Fox</b><br>Green scarf and a white-tipped tail.</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/chars/bunny.svg" width="96" alt="Bunny"><br><b>Bunny</b><br>Blue knit sweater, hugging a carrot.</td>
+<td align="center"><img src="docs/chars/owl.svg" width="96" alt="Owl"><br><b>Owl</b><br>Big round eyes, reading a red book.</td>
+<td align="center"><img src="docs/chars/frog.svg" width="96" alt="Frog"><br><b>Frog</b><br>Yellow raincoat and a big grin.</td>
+<td align="center"><img src="docs/chars/bear.svg" width="96" alt="Bear"><br><b>Bear</b><br>Red scarf, holding a honey pot.</td>
+</tr>
+</table>
+
+### Coming soon
+
+<table>
+<tr>
+<td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Raccoon</b><br>Coming soon</td>
+<td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Penguin</b><br>Coming soon</td>
+<td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Hedgehog</b><br>Coming soon</td>
+<td align="center" width="25%"><img src="docs/chars/soon.svg" width="96" alt="Coming soon"><br><b>Axolotl</b><br>Coming soon</td>
+</tr>
+</table>
+
+<details>
+<summary><b>Every character on every scene</b></summary>
+
+![Every character on every scene](docs/sprites.svg)
+
+</details>
 
 ## Install
 
@@ -75,9 +116,10 @@ In a fork, `sync.sh` works the same way, but it also copies your own `settings.j
 
 ## License
 
-The code, layout, theme and pixel art are licensed under the [Apache License 2.0](LICENSE), Copyright 2026 Denny Raymond.
-You can use, change and share them, including commercially, as long as you keep the license and the notices in [NOTICE](NOTICE).
+Copyright 2026 Denny Raymond. Two licenses apply; [NOTICE](NOTICE) says exactly which files each covers.
 
+- **Code** (the mods, the layout, the theme, the code in `sprites.py`, `sync.sh`): [Apache License 2.0](LICENSE). Use, change and share it, including commercially, keeping the license and NOTICE.
+- **Pixel art** (the characters and scenes: their drawings in `sprites.py`, the SVGs, `docs/`, `preview.png`): [CC BY-NC 4.0](LICENSE-ART). Use, change and share it with credit to "Cozy Pixel art by Denny Raymond" and a link here, for non-commercial use only. Ask me for commercial use.
 - `pixel-spaces` and `pixel-agents` are modified from the `spaces` and `agents` mods shipped with [Herdr](https://github.com/herdrdev/herdr-app) 0.1.15, also Apache 2.0. Each says what changed at the top of its `main.js`.
 - [Departure Mono](https://departuremono.com) by Helena Zhang is under the SIL Open Font License 1.1 (`pixel/mods/pixel-spaces/fonts/LICENSE-DepartureMono.txt`), not Apache.
 - The pixel art is original, drawn for this setup in a cozy chibi fantasy style inspired by [KayKit Adventurers](https://kaylousberg.itch.io/kaykit-adventurers). No KayKit assets are used.

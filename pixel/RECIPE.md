@@ -65,6 +65,7 @@ The focused pane's border and the cursor are orange.
 - The pictures are `image()` of SVGs in `mods/pixel-agents/scenes/` and `chars/`, with `shape-rendering="crispEdges"`. `sprites.py` draws them from text grids and rewrites them when run.
 - Icons come from the shipped `mods/workspace-chrome/*.svg`.
 - Neither mod downloads anything from the internet (`hc machine add` reconnects a machine over its own SSH target).
+- The art (drawings in `sprites.py`, `scenes/`, `chars/`, `preview.png`) is CC BY-NC 4.0; the code is Apache 2.0. See NOTICE in the repo.
 
 ## Watch out
 
